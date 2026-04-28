@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Tapper - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="resetBtn" style="position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 5px 15px; border-radius: 10px; cursor: pointer; z-index: 1000; font-family: 'Inter';">Reset Save</button>
+    <!-- Ambient Background Effects -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+    <!-- Health Bar & Stage Info -->
+    <div id="stageInfo" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 1000; pointer-events: none;">
+        <h2 id="stageName" style="color: #f8fafc; font-family: 'Outfit'; font-size: 2.5rem; margin-bottom: 5px; text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Stage 1</h2>
+        <div id="bossTimer" style="color: #ef4444; font-weight: 800; font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 10px; display: none; text-shadow: 0 2px 5px black;">⏱️ 30.0s</div>
+        <div style="width: 400px; height: 35px; background: rgba(0,0,0,0.7); border: 2px solid var(--primary); border-radius: 20px; overflow: hidden; box-shadow: 0 0 20px var(--primary-glow);">
+            <div id="hpBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #ef4444, #f87171); transition: width 0.1s ease-out;"></div>
+        </div>
+        <div id="hpText" style="color: white; font-weight: 800; font-family: 'Outfit'; font-size: 1.2rem; margin-top: -28px; text-shadow: 0 2px 4px black;">10 / 10 HP</div>
+    </div>
+
+    <!-- เป้าหมาย (มอนสเตอร์) ที่จะวิ่งไปมาทั่วหน้าจอ -->
+    <button class="ai-core" id="aiCore"></button>
+
+    <div class="game-container">
+        <!-- ฝั่งซ้าย แสดงคะแนน -->
+        <div class="clicker-section">
+            <h1 class="game-title">MONSTER <span class="text-glow">TAPPER</span></h1>
+            <div class="score-board">
+                <div class="score-label">Total Tokens</div>
+                <div class="score-value" id="scoreDisplay">0</div>
+                <div class="tps-value" id="tpsDisplay">0 Tokens / sec</div>
+                <div class="combo-display" id="comboDisplay">Combo x1.0! 🔥</div>
+            </div>
+        </div>
+
+        <!-- ฝั่งขวา อัปเกรด -->
+        <div class="upgrades-section">
+            <h2 class="section-title">Upgrades</h2>
+            <div class="upgrades-list" id="upgradesList">
+                <!-- แทรกข้อมูลผ่าน JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- หน้าต่างแจ้งเตือนรายได้ตอน Offline -->
+    <div class="offline-modal" id="offlineModal">
+        <div class="offline-content">
+            <h2>Welcome Back! 🚀</h2>
+            <p>ขณะที่คุณไม่อยู่ ระบบ AI ของเรายังคงทำงานต่อไป...</p>
+            <div class="offline-earnings" id="offlineEarnings">+0 Tokens</div>
+            <button class="claim-btn" id="claimBtn">Claim Tokens</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
