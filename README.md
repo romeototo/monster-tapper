@@ -1,37 +1,86 @@
-# Monster Tapper ⚔️🐉
+<div align="center">
 
-A premium, juicy Idle/Clicker Web Game built purely with Vanilla HTML, CSS, and JavaScript. 
-Ready to be deployed on GitHub Pages as a portfolio piece!
+# 👾 Monster Tapper
+
+### Action-Packed Idle Clicker Web Game with Boss Battles
+
+[![Play Now](https://img.shields.io/badge/▶_Play_Now-FF4757?style=for-the-badge&logo=google-chrome&logoColor=white)](https://romeototo.github.io/monster-tapper/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+
+<img src="assets/screenshots/gameplay.png" alt="Monster Tapper Gameplay" width="800" />
+
+</div>
+
+---
+
+## 📖 About
+
+**Monster Tapper** is an action-packed idle clicker game where you battle through stages of increasingly powerful monsters and epic bosses. Tap to deal damage, earn tokens, hire heroes, and build your team to defeat the toughest creatures!
 
 ## ✨ Features
-- **Premium Aesthetics:** Glassmorphism UI, animated tech-grid background, glowing orbs, and smooth CSS animations.
-- **RPG Progression:** Fight monsters through stages. Max HP scales exponentially. Every 10 stages is an Epic Boss!
-- **Boss Mechanics:** Epic Bosses have 5x Health and must be defeated within a 30-second time limit, or you get knocked back a stage.
-- **Juicy Game Feel:** Screen shake, dynamic floating damage numbers, critical hits (10% chance for 5x damage), and a massive physics-based coin explosion when monsters die!
-- **Upgrades & Auto-DPS:** Hire peasants, mercenaries, and archmages to deal automatic Damage Per Second (DPS) to the monsters.
-- **Custom Assets:** 10 unique AI-generated monsters and 3 rotating weapon cursors. 
-- **Web Audio API:** 100% procedural synthesized sound effects (hits, crits, purchases, and boss clears)—no external audio files required!
-- **Save & Load:** Progress (Stage, Tokens, Upgrades, Monster HP) is automatically saved to `localStorage` every 5 seconds.
-- **Offline Progress:** Close the tab and come back later to claim the gold your mercenaries farmed while you were away.
 
-## 🚀 How to Play
-1. **Smash the Monster:** Click the monster floating around the screen to deal damage and earn gold. Click fast to build up a **Combo Multiplier** (up to x5)!
-2. **Buy Upgrades:** Spend your tokens (gold) on the right panel to hire units that automatically attack the monster.
-3. **Synergy Bonus:** Every 5 upgrades purchased increases your manual click power.
-4. **Beat the Boss:** When you reach stage 10, 20, 30..., you have 30 seconds to kill the Epic Boss. Click as fast as you can!
-5. **Catch the Loot:** Watch out for the random flying money bag for a massive token injection.
+- ⚔️ **Tap-to-Attack** — Click monsters to deal damage and earn tokens
+- 🐉 **Boss Battles** — Face epic bosses with timed challenges
+- 🦸 **Hero System** — Recruit 5 unique heroes with auto-damage abilities
+- 📈 **Stage Progression** — Battle through increasingly difficult stages
+- 💰 **Token Economy** — Earn and spend tokens on powerful upgrades
+- 🎨 **Dynamic Visuals** — Vibrant gradient backgrounds with smooth animations
+- 💾 **Save Progress** — Game state saved to localStorage
+- 📱 **Mobile Friendly** — Responsive design for all devices
 
 ## 🛠️ Tech Stack
-- **HTML5**
-- **CSS3** (Variables, Flexbox, Keyframes, Custom Cursors, Media Queries)
-- **Vanilla JavaScript** (DOM manipulation, Custom Game Loop, Web Audio API, LocalStorage, Custom Physics Engine for coins)
 
-## 🎮 Setup (Local)
-No build step required! Simply clone the repo and open `index.html` in your favorite web browser.
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 
-## 🌐 Deploy to GitHub Pages
-1. Push this repository to GitHub.
-2. Go to your repository settings.
-3. Navigate to **Pages** on the left sidebar.
-4. Under "Build and deployment", set the source to `Deploy from a branch` and select the `main` branch.
-5. Save, wait a minute, and share your link with the world!
+- **Frontend:** Vanilla HTML5, CSS3, JavaScript
+- **Styling:** Dark/gradient theme with glassmorphism effects
+- **Assets:** Custom monster sprites and boss images
+- **Hosting:** GitHub Pages
+
+## 🚀 Play
+
+### Online
+👉 **[Play Now — romeototo.github.io/monster-tapper](https://romeototo.github.io/monster-tapper/)**
+
+### Local
+```bash
+git clone https://github.com/romeototo/monster-tapper.git
+cd monster-tapper
+# Open index.html in your browser
+```
+
+## 🎯 How to Play
+
+1. **Tap** the monster to deal damage
+2. **Defeat monsters** to earn tokens
+3. **Hire heroes** for automatic damage per second
+4. **Fight bosses** at milestone stages (timed battles!)
+5. **Upgrade heroes** to increase their power
+6. **Progress** through ever-harder stages
+
+## 🦸 Heroes
+
+| Hero | Auto-Damage | Cost |
+|------|------------|------|
+| ชาวบ้านถือไม้กระบอง | +1 DPS | 15 T |
+| นักดาบรับจ้าง | +5 DPS | 100 T |
+| พลธนูเอลฟ์ | +50 DPS | 1.1k T |
+| จอมเวทศักดิ์สิทธิ์ | +250 DPS | 12k T |
+| มังกรเพลิงบรรลัยกัลป์ | +2000 DPS | 130k T |
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+**Made with ❤️ by [RoMEoTOTO](https://github.com/romeototo)**
+
+[![X](https://img.shields.io/badge/@RoMeoT0T0-000?style=flat-square&logo=x&logoColor=white)](https://x.com/RoMeoT0T0)
+[![GitHub](https://img.shields.io/badge/romeototo-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/romeototo)
+
+</div>
