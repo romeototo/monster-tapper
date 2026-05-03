@@ -1,5 +1,9 @@
 # 🗡️ Monster Tapper
 
+<div align="center">
+<i>👉 <a href="README-th.md">🇹🇭 อ่านรายละเอียดภาษาไทย</a></i><br><br>
+</div>
+
 ![Monster Tapper Demo](https://raw.githubusercontent.com/romeototo/monster-tapper/main/screenshot.gif)
 
 An action-packed idle clicker web game. Defeat monsters, earn gold, upgrade your damage, and face challenging Boss Battles with strict time limits!
