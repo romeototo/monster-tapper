@@ -1,3 +1,4 @@
+let tokens = 0;
 let totalKills = 0; // จำนวนที่ฆ่าได้ทั้งหมด
 let killStreak = 0;
 let streakTimer = 0; // วิที่เหลือสำหรับ streak
@@ -518,6 +519,8 @@ function dealDamage(amount, x, y, isCrit) {
     );
 
     currentStage++;
+    // Mission: Stage reach hook
+    if (window.missionOnStageReach) window.missionOnStageReach(currentStage);
     initStage();
     swapWeapon();
     moveBossRandomly();
@@ -529,6 +532,10 @@ function dealDamage(amount, x, y, isCrit) {
   if (monsterHP <= 0) {
     killStreak++;
     streakTimer = 8; // มีเวลา 8 วิในการฆ่าตัวต่อไป
+    // Mission: Kill hook
+    if (window.missionOnKill) window.missionOnKill();
+    // Streak Bar update
+    if (window.updateStreakBar) window.updateStreakBar(killStreak, 5);
     if (killStreak >= 5 && !isGoldRush) {
       triggerGoldRush();
     }
@@ -540,8 +547,11 @@ function triggerGoldRush() {
   goldRushTimer = 20; // 20 seconds of glory
   document.body.classList.add("gold-rush-active");
   playGolden();
+  // Mission: Gold Rush hook
+  if (window.missionOnGoldRush) window.missionOnGoldRush();
   // Reset streak after trigger
   killStreak = 0;
+  if (window.updateStreakBar) window.updateStreakBar(0, 5);
 }
 
 // Monster zone: left side only, safe margins for 160px monster
@@ -698,6 +708,8 @@ function buyUpgrade(upgrade) {
     renderUpgrades();
     updateUI();
     saveGame();
+    // Mission: Upgrade purchase hook
+    if (window.missionOnUpgradeBuy) window.missionOnUpgradeBuy();
   }
 }
 

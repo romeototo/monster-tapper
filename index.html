@@ -10,6 +10,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="missions.css" />
   </head>
   <body>
 
@@ -78,6 +79,30 @@
         <span class="prestige-label">⚡ LEGACY READY</span>
         <button id="prestigeBtn" class="prestige-btn-small">Ascend Now</button>
       </div>
+
+      <!-- Kill Streak Progress Bar -->
+      <div class="streak-wrapper" id="streakWrapper" style="display:none;">
+        <div class="streak-header">
+          <span class="streak-label">🔥 Kill Streak</span>
+          <span id="streakCount" class="streak-count">0 / 5</span>
+        </div>
+        <div class="streak-track">
+          <div id="streakBar" class="streak-fill"></div>
+        </div>
+        <div class="streak-hint">Kill 5 in a row → 💰 GOLD RUSH x2!</div>
+      </div>
+
+      <!-- Daily Missions Panel -->
+      <div class="daily-missions-panel">
+        <div class="missions-header">
+          <span class="missions-title">📋 Daily Missions</span>
+          <span id="missionsResetTimer" class="missions-reset">Resets in: --:--:--</span>
+        </div>
+        <div id="missionsList" class="missions-list">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
     </div>
 
     <!-- ===== Floating Stage Name (above monster, updated by JS) ===== -->
@@ -127,5 +152,6 @@
 
     <script src="script.js"></script>
     <script src="bg-engine.js"></script>
+    <script src="missions.js"></script>
   </body>
 </html>

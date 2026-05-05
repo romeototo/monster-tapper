@@ -1,0 +1,183 @@
+/* ═══════════════════════════════════════════════
+   KILL STREAK BAR
+═══════════════════════════════════════════════ */
+.streak-wrapper {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  transition: opacity 0.4s;
+}
+.streak-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.streak-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ef4444;
+  font-weight: 700;
+}
+.streak-count {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+.streak-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.streak-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ef4444, #fbbf24, #ef4444);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+  animation: streakShimmer 1.5s infinite;
+}
+@keyframes streakShimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.streak-hint {
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════
+   DAILY MISSIONS PANEL
+═══════════════════════════════════════════════ */
+.daily-missions-panel {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 10px;
+}
+.missions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.missions-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.missions-reset {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
+.missions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Individual Mission Row */
+.mission-row {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.mission-row.completed {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.mission-row.claimed {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.5;
+}
+.mission-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.mission-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.mission-reward {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+.mission-progress-track {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.mission-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #a8b1ff);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.mission-row.completed .mission-progress-fill {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+.mission-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mission-progress-text {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+}
+.mission-claim-btn {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(90deg, #10b981, #059669);
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.mission-claim-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6);
+}
+.mission-done-badge {
+  font-size: 0.6rem;
+  color: rgba(16, 185, 129, 0.5);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Claim Animation */
+@keyframes claimPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+.mission-claiming {
+  animation: claimPop 0.4s ease;
+}
