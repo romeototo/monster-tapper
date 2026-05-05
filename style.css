@@ -29,16 +29,48 @@ body {
   user-select: none;
 }
 
-/* ── Dot-grid background ── */
+/* ── Background Canvas ── */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* ── Scanline overlay for CRT depth ── */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
-  z-index: -3;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  z-index: 1;
+  pointer-events: none;
+  animation: scanlineShift 8s linear infinite;
+}
+@keyframes scanlineShift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 40px; }
+}
+
+/* ── Vignette ── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 40%,
+    rgba(0,0,0,0.55) 100%
+  );
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -46,18 +78,18 @@ body::before {
 .bg-orb {
   position: fixed;
   border-radius: 50%;
-  filter: blur(120px);
-  z-index: -2;
-  opacity: 0.25;
+  filter: blur(140px);
+  z-index: -1;
+  opacity: 0.18;
   pointer-events: none;
   animation: floatOrb 25s infinite alternate ease-in-out;
 }
-.orb-1 { width: 55vw; height: 55vw; background: var(--primary); top: -25%; left: -15%; animation-duration: 28s; }
-.orb-2 { width: 45vw; height: 45vw; background: #8b5cf6; bottom: -25%; right: -15%; animation-duration: 22s; animation-delay: -6s; }
-.orb-3 { width: 30vw; height: 30vw; background: #06b6d4; top: 45%; left: 35%; animation-duration: 35s; animation-delay: -12s; }
+.orb-1 { width: 60vw; height: 60vw; background: var(--primary); top: -30%; left: -20%; animation-duration: 28s; }
+.orb-2 { width: 50vw; height: 50vw; background: #8b5cf6; bottom: -30%; right: -20%; animation-duration: 22s; animation-delay: -6s; }
+.orb-3 { width: 35vw; height: 35vw; background: #06b6d4; top: 40%; left: 30%; animation-duration: 35s; animation-delay: -12s; }
 @keyframes floatOrb {
   from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(8vw, 8vh) scale(1.2); }
+  to   { transform: translate(10vw, 10vh) scale(1.25); }
 }
 
 /* ── Flash Overlay ── */

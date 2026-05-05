@@ -465,6 +465,7 @@ function dealDamage(amount, x, y, isCrit) {
       spawnParticles(x, y, "#fbbf24", 20); // ประกายทอง
       spawnParticles(x, y, "#ffffff", 10); // สะเก็ดแสงสว่าง
       triggerFlash();
+      if (window.triggerEnergyPulse) window.triggerEnergyPulse(x, y);
     } else {
       spawnParticles(x, y, "var(--primary)", 8);
     }
