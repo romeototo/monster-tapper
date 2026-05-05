@@ -127,16 +127,25 @@ const activeSkills = [
 
 // --- Generated Art Assets (Epic transparent-bg monsters) ---
 const monsters = [
-  "assets/m1_crystal_golem.png",      // Crystal Golem
-  "assets/m2_neon_dragon.png",        // Neon Cyber Dragon
-  "assets/m3_lava_titan.png",         // Lava Titan
-  "assets/m4_void_phantom.png",       // Void Phantom
-  "assets/m5_storm_phoenix.png",      // Storm Phoenix
-  "assets/m6_toxic_troll.png",        // Toxic Troll
-  "assets/m7_frost_queen.png",        // Frost Queen
-  "assets/m8_shadow_necromancer.png", // Shadow Necromancer
-  "assets/m9_golden_demon.png",       // Golden Demon (mini-boss)
-  "assets/m10_chaos_dragon.png",      // Chaos Dragon (Elite Boss)
+  "assets/m1_crystal_golem.png",
+  "assets/m2_neon_dragon.png",
+  "assets/m3_lava_titan.png",
+  "assets/m4_void_phantom.png",
+  "assets/m5_storm_phoenix.png",
+  "assets/m6_toxic_troll.png",
+  "assets/m7_frost_queen.png",
+  "assets/m8_shadow_necromancer.png",
+  "assets/m9_golden_demon.png",
+  "assets/m11_cyber_scorpion.png",
+  "assets/m12_neon_werewolf.png",
+  "assets/m13_eldritch_eye.png",
+  "assets/m14_skeletal_warlord.png",
+  "assets/m15_acid_slime.png",
+  "assets/m16_corrupt_ent.png",
+  "assets/m17_shadow_naga.png",
+  "assets/m18_venom_broodmother.png",
+  "assets/m19_mecha_golem.png",
+  "assets/m10_chaos_dragon.png", // Keep M10 as Elite Boss
 ];
 let lastMonsterIndex = -1; // track last shown to avoid repeat
 
@@ -305,13 +314,13 @@ function initStage() {
   monsterMaxHP = Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
   monsterHP = monsterMaxHP;
 
-  // Monster image — Boss = Chaos Dragon (9), Normal = random no-repeat
+  // Monster image — Boss = Chaos Dragon (index 18), Normal = random no-repeat
   let mIndex;
   if (isBossStage) {
-    mIndex = 9; // always Chaos Dragon for boss
+    mIndex = 18; // always Chaos Dragon for boss
   } else {
-    // Random pick from m0–m8, avoid repeating last shown
-    const pool = [...Array(9).keys()].filter(i => i !== lastMonsterIndex);
+    // Random pick from m0–m17, avoid repeating last shown
+    const pool = [...Array(18).keys()].filter(i => i !== lastMonsterIndex);
     mIndex = pool[Math.floor(Math.random() * pool.length)];
     lastMonsterIndex = mIndex;
   }
