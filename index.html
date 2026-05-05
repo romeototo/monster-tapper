@@ -8,57 +8,65 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="resetBtn" style="position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 5px 15px; border-radius: 10px; cursor: pointer; z-index: 1000; font-family: 'Inter';">Reset Save</button>
+    <button id="resetBtn" style="position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 20px; border-radius: 12px; cursor: pointer; z-index: 1000; font-family: 'Inter'; font-size: 0.8rem; transition: all 0.2s;">Reset Data</button>
+    
     <!-- Ambient Background Effects -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
+    <div id="flashOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 2000;"></div>
+
     <!-- Health Bar & Stage Info -->
-    <div id="stageInfo" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 1000; pointer-events: none;">
-        <h2 id="stageName" style="color: #f8fafc; font-family: 'Outfit'; font-size: 2.5rem; margin-bottom: 5px; text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Stage 1</h2>
-        <div id="bossTimer" style="color: #ef4444; font-weight: 800; font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 10px; display: none; text-shadow: 0 2px 5px black;">⏱️ 30.0s</div>
-        <div style="width: 400px; height: 35px; background: rgba(0,0,0,0.7); border: 2px solid var(--primary); border-radius: 20px; overflow: hidden; box-shadow: 0 0 20px var(--primary-glow);">
-            <div id="hpBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #ef4444, #f87171); transition: width 0.1s ease-out;"></div>
+    <div id="stageInfo" style="position: fixed; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 1000; pointer-events: none;">
+        <h2 id="stageName" style="color: #f8fafc; font-family: 'Outfit'; font-size: 2.8rem; margin-bottom: 8px; text-shadow: 0 4px 20px rgba(0,0,0,0.5); letter-spacing: 2px;">STAGE 1</h2>
+        <div id="bossTimer" style="color: #ef4444; font-weight: 800; font-family: 'Outfit'; font-size: 1.8rem; margin-bottom: 15px; display: none; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);">⏱️ 30.0s</div>
+        
+        <div class="hp-container" style="width: 450px; height: 40px; background: rgba(15, 23, 42, 0.8); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div id="hpBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #06b6d4, #8b5cf6); transition: width 0.15s cubic-bezier(0, 0, 0.2, 1);"></div>
+            <div id="hpText" style="position: absolute; width: 100%; top: 50%; transform: translateY(-50%); color: white; font-weight: 800; font-family: 'Outfit'; font-size: 1.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">10 / 10 HP</div>
         </div>
-        <div id="hpText" style="color: white; font-weight: 800; font-family: 'Outfit'; font-size: 1.2rem; margin-top: -28px; text-shadow: 0 2px 4px black;">10 / 10 HP</div>
     </div>
 
-    <!-- เป้าหมาย (มอนสเตอร์) ที่จะวิ่งไปมาทั่วหน้าจอ -->
+    <!-- Monster Core -->
     <button class="ai-core" id="aiCore"></button>
 
     <div class="game-container">
-        <!-- ฝั่งซ้าย แสดงคะแนน -->
+        <!-- Score Section -->
         <div class="clicker-section">
-            <h1 class="game-title">MONSTER <span class="text-glow">TAPPER</span></h1>
+            <h1 class="game-title">MONSTER <span class="text-glow">TAPPER</span> <small style="font-size: 1rem; vertical-align: middle; opacity: 0.5;">PRO</small></h1>
             <div class="score-board">
-                <div class="score-label">Total Tokens</div>
+                <div class="score-label">Total Essence</div>
                 <div class="score-value" id="scoreDisplay">0</div>
-                <div class="tps-value" id="tpsDisplay">0 Tokens / sec</div>
-                <div class="combo-display" id="comboDisplay">Combo x1.0! 🔥</div>
+                <div class="tps-value" id="tpsDisplay">0 DPS</div>
+                <div class="combo-display" id="comboDisplay">COMBO x1.0 🔥</div>
+            </div>
+
+            <!-- Prestige Section (Initially Hidden) -->
+            <div id="prestigeSection" style="display: none; background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; padding: 1.5rem; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); animation: fadeIn 0.5s;">
+                <h3 style="color: #fbbf24; margin-bottom: 10px;">LEGACY READY</h3>
+                <button id="prestigeBtn" class="claim-btn" style="padding: 10px 25px; font-size: 1rem;">Ascend Now</button>
             </div>
         </div>
 
-        <!-- ฝั่งขวา อัปเกรด -->
+        <!-- Upgrades Section -->
         <div class="upgrades-section">
-            <h2 class="section-title">Upgrades</h2>
+            <h2 class="section-title">Barracks & Arsenal</h2>
             <div class="upgrades-list" id="upgradesList">
-                <!-- แทรกข้อมูลผ่าน JS -->
+                <!-- Injected via JS -->
             </div>
         </div>
     </div>
 
-    <!-- แถบสกิลด้านล่าง -->
-    <div class="skills-container" id="skillsContainer">
-        <!-- จะถูกสร้างผ่าน JS -->
-    </div>
+    <!-- Active Skills -->
+    <div class="skills-container" id="skillsContainer"></div>
 
-    <!-- หน้าต่างแจ้งเตือนรายได้ตอน Offline -->
+    <!-- Offline Modal -->
     <div class="offline-modal" id="offlineModal">
         <div class="offline-content">
-            <h2>Welcome Back! 🚀</h2>
-            <p>ขณะที่คุณไม่อยู่ ระบบ AI ของเรายังคงทำงานต่อไป...</p>
-            <div class="offline-earnings" id="offlineEarnings">+0 Tokens</div>
-            <button class="claim-btn" id="claimBtn">Claim Tokens</button>
+            <h2>WELCOME BACK! 🚀</h2>
+            <p>Your hunters continued the raid while you were away...</p>
+            <div class="offline-earnings" id="offlineEarnings">+0 Essence</div>
+            <button class="claim-btn" id="claimBtn">Collect Essence</button>
         </div>
     </div>
 

@@ -1,19 +1,5 @@
-let tokens = 0;
-let tokensPerSecond = 0;
-let clickPower = 1;
-
-let currentStage = 1;
-let monsterMaxHP = 50;
-let monsterHP = 50;
-let bossTimeLeft = 0;
-let isBossStage = false;
-
-// ระบบ Combo
-let combo = 1;
-let comboTimer = 0;
-
-// Constants สำหรับระบบ Save
-const SAVE_KEY = 'ai_tycoon_save';
+let prestigeMultiplier = 1;
+let totalAscensions = 0;
 
 const scoreDisplay = document.getElementById('scoreDisplay');
 const tpsDisplay = document.getElementById('tpsDisplay');
@@ -24,18 +10,21 @@ const offlineModal = document.getElementById('offlineModal');
 const offlineEarnings = document.getElementById('offlineEarnings');
 const claimBtn = document.getElementById('claimBtn');
 const skillsContainer = document.getElementById('skillsContainer');
+const prestigeSection = document.getElementById('prestigeSection');
+const prestigeBtn = document.getElementById('prestigeBtn');
+
+const upgrades = [
+    { id: 'recruit', name: 'Volunteer Militia', desc: '+1 Auto-Damage', baseCost: 15, costMult: 1.15, tps: 1, count: 0 },
+    { id: 'knight', name: 'Elite Knight', desc: '+5 Auto-Damage', baseCost: 100, costMult: 1.15, tps: 5, count: 0 },
+    { id: 'sniper', name: 'Elven Sniper', desc: '+50 Auto-Damage', baseCost: 1100, costMult: 1.15, tps: 50, count: 0 },
+    { id: 'warlock', name: 'Void Warlock', desc: '+250 Auto-Damage', baseCost: 12000, costMult: 1.15, tps: 250, count: 0 },
+    { id: 'behemoth', name: 'Ancient Behemoth', desc: '+2,000 Auto-Damage', baseCost: 130000, costMult: 1.15, tps: 2000, count: 0 },
+    { id: 'titan', name: 'Celestial Titan', desc: '+10,000 Auto-Damage', baseCost: 1400000, costMult: 1.15, tps: 10000, count: 0 }
+];
 
 const activeSkills = [
     { id: 'berserk', name: 'Berserk', icon: '🔥', desc: 'x5 Click Damage', duration: 10, cooldown: 60, currentCD: 0, isActive: false },
-    { id: 'midas', name: 'Midas', icon: '💰', desc: 'Instant Gold', duration: 0, cooldown: 45, currentCD: 0, isActive: false }
-];
-
-const upgrades = [
-    { id: 'peasant', name: '🧑‍🌾 ชาวบ้านถือไม้กระบอง', desc: '+1 Auto-Damage / วินาที', baseCost: 15, costMult: 1.15, tps: 1, count: 0 },
-    { id: 'mercenary', name: '⚔️ นักดาบรับจ้าง', desc: '+5 Auto-Damage / วินาที', baseCost: 100, costMult: 1.15, tps: 5, count: 0 },
-    { id: 'archer', name: '🏹 พลธนูเอลฟ์', desc: '+50 Auto-Damage / วินาที', baseCost: 1100, costMult: 1.15, tps: 50, count: 0 },
-    { id: 'mage', name: '🧙‍♂️ จอมเวทศักดิ์สิทธิ์', desc: '+250 Auto-Damage / วินาที', baseCost: 12000, costMult: 1.15, tps: 250, count: 0 },
-    { id: 'dragon', name: '🐉 มังกรเพลิงบรรลัยกัลป์', desc: '+2000 Auto-Damage / วินาที', baseCost: 130000, costMult: 1.15, tps: 2000, count: 0 }
+    { id: 'midas', name: 'Midas', icon: '💰', desc: 'Loot Stash', duration: 0, cooldown: 45, currentCD: 0, isActive: false }
 ];
 
 // --- Generated Art Assets ---
@@ -86,10 +75,12 @@ function playGolden() {
 
 // ----------------- Core Game Logic -----------------
 function formatNumber(num) {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-    if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-    return Math.floor(num).toString();
+    if (num < 1000) return Math.floor(num).toString();
+    const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
+    const suffixNum = Math.floor(("" + Math.floor(num)).length / 3);
+    let shortValue = parseFloat((suffixNum != 0 ? (num / Math.pow(1000, suffixNum)) : num).toPrecision(3));
+    if (shortValue % 1 != 0) shortValue = shortValue.toFixed(2);
+    return shortValue + suffixes[suffixNum];
 }
 
 function getCost(upgrade) { return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMult, upgrade.count)); }
@@ -123,9 +114,9 @@ function updateUI() {
 }
 
 function recalculateStats() {
-    tokensPerSecond = upgrades.reduce((acc, curr) => acc + (curr.tps * curr.count), 0);
+    tokensPerSecond = upgrades.reduce((acc, curr) => acc + (curr.tps * curr.count), 0) * prestigeMultiplier;
     const totalUpgrades = upgrades.reduce((acc, curr) => acc + curr.count, 0);
-    clickPower = 1 + Math.floor(totalUpgrades / 5);
+    clickPower = (1 + Math.floor(totalUpgrades / 5)) * prestigeMultiplier;
 }
 
 // ----------------- Monster Health & Stages -----------------
@@ -145,10 +136,15 @@ function initStage() {
     const stageNameElem = document.getElementById('stageName');
     if(stageNameElem) {
         if (isBossStage) {
-            stageNameElem.innerHTML = `<span style="color: #fbbf24; text-shadow: 0 0 15px #f59e0b;">👑 EPIC BOSS STAGE ${currentStage} 👑</span>`;
+            stageNameElem.innerHTML = `<span style="color: #fbbf24; text-shadow: 0 0 15px #f59e0b;">👑 ELITE BOSS ${currentStage} 👑</span>`;
         } else {
-            stageNameElem.innerText = `Stage ${currentStage}`;
+            stageNameElem.innerText = `STAGE ${currentStage}`;
         }
+    }
+    
+    // Prestige check
+    if (currentStage >= 50 && prestigeSection) {
+        prestigeSection.style.display = 'block';
     }
     
     // ตั้งค่าตัวจับเวลาบอส (30 วินาที)
@@ -252,6 +248,8 @@ function dealDamage(amount, x, y, isCrit) {
         createFloatingNumber(x, y, amount, isCrit);
         spawnParticles(x, y, isCrit ? '#fbbf24' : null);
         
+        if (isCrit) triggerFlash();
+
         // Squash & Stretch
         aiCore.classList.remove('monster-hit');
         void aiCore.offsetWidth;
@@ -265,7 +263,7 @@ function dealDamage(amount, x, y, isCrit) {
         
         const bonus = Math.floor(monsterMaxHP * 0.5);
         tokens += bonus;
-        createFloatingNumber(window.innerWidth/2, window.innerHeight/2, bonus, true, "DEFEATED! +");
+        createFloatingNumber(window.innerWidth/2, window.innerHeight/2, bonus, true, "CLEARED! +");
         
         currentStage++;
         initStage();
@@ -363,6 +361,8 @@ function saveGame() {
         tokens: tokens,
         currentStage: currentStage,
         monsterHP: monsterHP,
+        prestigeMultiplier: prestigeMultiplier,
+        totalAscensions: totalAscensions,
         lastSaveTime: Date.now(),
         upgrades: upgrades.map(u => u.count)
     };
@@ -377,6 +377,8 @@ function loadGame() {
             tokens = data.tokens || 0;
             currentStage = data.currentStage || 1;
             monsterHP = data.monsterHP || -1;
+            prestigeMultiplier = data.prestigeMultiplier || 1;
+            totalAscensions = data.totalAscensions || 0;
             
             if (data.upgrades) {
                 upgrades.forEach((u, i) => { if(data.upgrades[i] !== undefined) u.count = data.upgrades[i]; });
@@ -462,14 +464,41 @@ function useSkill(skill) {
             renderSkills();
         }, skill.duration * 1000);
     } else if (skill.id === 'midas') {
-        const reward = tokensPerSecond * 60 + (100 * clickPower);
+        const reward = tokensPerSecond * 60 + (500 * clickPower);
         tokens += reward;
         skill.currentCD = skill.cooldown;
-        createFloatingNumber(window.innerWidth/2, window.innerHeight/2, reward, true, "MIDAS! +");
+        createFloatingNumber(window.innerWidth/2, window.innerHeight/2, reward, true, "JACKPOT! +");
     }
     
     renderSkills();
 }
+
+function triggerFlash() {
+    const overlay = document.getElementById('flashOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('flash-anim');
+    void overlay.offsetWidth;
+    overlay.classList.add('flash-anim');
+}
+
+function ascend() {
+    if (confirm("ASCENSION: Reset all progress to gain permanent +100% Damage Multiplier?")) {
+        totalAscensions++;
+        prestigeMultiplier += 1.0;
+        tokens = 0;
+        currentStage = 1;
+        upgrades.forEach(u => u.count = 0);
+        if (prestigeSection) prestigeSection.style.display = 'none';
+        recalculateStats();
+        initStage();
+        renderUpgrades();
+        updateUI();
+        saveGame();
+        playGolden();
+    }
+}
+
+if (prestigeBtn) prestigeBtn.onclick = ascend;
 
 // Game Loop
 let lastTime = Date.now();
