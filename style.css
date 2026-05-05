@@ -117,38 +117,84 @@ body::before {
 
 .stats-row {
   display: flex;
-  align-items: center;
-  gap: 0;
+  flex-direction: column;
+  gap: 8px;
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 12px;
+  padding: 12px 14px 10px;
+}
+.essence-block {
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.stats-sub-row {
+  display: flex;
+  align-items: center;
 }
 .stat-block {
   flex: 1;
-  padding: 12px 10px;
+  padding: 4px 8px;
   text-align: center;
 }
 .stat-label {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 .stat-value {
   font-family: "Outfit", sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   color: var(--text-main);
 }
+/* Big Essence number */
+.stat-essence {
+  font-size: 2.2rem;
+  letter-spacing: -2px;
+  background: linear-gradient(120deg, #fff 40%, #a8b1ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
 .stat-value.accent { color: var(--secondary); }
 .stat-divider {
   width: 1px;
-  height: 36px;
+  height: 28px;
   background: var(--glass-border);
+}
+
+/* Stage Progress Bar */
+.stage-progress-wrapper {
+  margin-bottom: 10px;
+}
+.stage-progress-track {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.stage-progress-fill {
+  height: 100%;
+  width: 10%;
+  background: linear-gradient(90deg, var(--primary), #a8b1ff);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 6px var(--primary-glow);
+}
+.stage-progress-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-align: right;
+  letter-spacing: 0.5px;
 }
 
 .combo-display {
@@ -305,21 +351,22 @@ body { cursor: none !important; }
 }
 
 /* ════════════════════════════════
-   MONSTER BUTTON
+   MONSTER BUTTON (no dark circle)
 ════════════════════════════════ */
 .ai-core {
   width: 110px;
   height: 110px;
   border-radius: 50%;
   background-color: transparent;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   border: none;
   cursor: none;
   position: fixed;
   outline: none;
   z-index: 50;
-  filter: drop-shadow(0 0 18px rgba(0,0,0,0.7));
+  filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
   transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               filter 0.05s;
@@ -327,6 +374,33 @@ body { cursor: none !important; }
 .ai-core:active {
   filter: brightness(1.6) drop-shadow(0 0 25px red);
   transform: scale(0.82);
+}
+
+/* ════════════════════════════════
+   MONSTER AURA (ambient pulsing glow)
+════════════════════════════════ */
+.monster-aura {
+  position: fixed;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 45;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  animation: auraBreath 3s ease-in-out infinite;
+  transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.monster-aura.aura-boss {
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(245,166,35,0.4) 0%, transparent 70%);
+  animation: auraBreath 1.5s ease-in-out infinite;
+}
+@keyframes auraBreath {
+  0%,100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1);    }
+  50%      { opacity: 1.0; transform: translate(-50%, -50%) scale(1.15); }
 }
 
 /* ════════════════════════════════
@@ -401,7 +475,8 @@ body { cursor: none !important; }
 .upgrade-btn:active:not(:disabled) { transform: scale(0.97); }
 .upgrade-btn:disabled { opacity: 0.28; cursor: not-allowed; filter: grayscale(1); }
 
-.upgrade-info h3 { font-size: 0.95rem; margin-bottom: 2px; font-weight: 600; }
+.upgrade-info h3 { font-size: 0.95rem; margin-bottom: 2px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.upgrade-icon { font-size: 1.1rem; line-height: 1; }
 .upgrade-info p  { font-size: 0.75rem; color: var(--text-muted); }
 
 .upgrade-price {

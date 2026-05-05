@@ -37,6 +37,7 @@ const PANEL_WIDTH     = 380; // px — width of right upgrades panel
 const upgrades = [
   {
     id: "recruit",
+    icon: "🗡️",
     name: "Volunteer Militia",
     desc: "+1 Auto-Damage",
     baseCost: 15,
@@ -46,6 +47,7 @@ const upgrades = [
   },
   {
     id: "knight",
+    icon: "⚔️",
     name: "Elite Knight",
     desc: "+5 Auto-Damage",
     baseCost: 100,
@@ -55,6 +57,7 @@ const upgrades = [
   },
   {
     id: "sniper",
+    icon: "🏹",
     name: "Elven Sniper",
     desc: "+50 Auto-Damage",
     baseCost: 1100,
@@ -64,6 +67,7 @@ const upgrades = [
   },
   {
     id: "warlock",
+    icon: "🔮",
     name: "Void Warlock",
     desc: "+250 Auto-Damage",
     baseCost: 12000,
@@ -73,6 +77,7 @@ const upgrades = [
   },
   {
     id: "behemoth",
+    icon: "🐉",
     name: "Ancient Behemoth",
     desc: "+2,000 Auto-Damage",
     baseCost: 130000,
@@ -82,6 +87,7 @@ const upgrades = [
   },
   {
     id: "titan",
+    icon: "⚡",
     name: "Celestial Titan",
     desc: "+10,000 Auto-Damage",
     baseCost: 1400000,
@@ -229,7 +235,13 @@ function renderUpgrades() {
     btn.className = "upgrade-btn";
     btn.disabled = !canAfford;
     btn.onclick = () => buyUpgrade(upgrade);
-    btn.innerHTML = `<div class="upgrade-info"><h3>${upgrade.name}</h3><p>${upgrade.desc}</p></div><div class="upgrade-price ${canAfford ? "cost-green" : "cost-red"}">${formatNumber(cost)} T</div>`;
+    btn.innerHTML = `
+      <div class="upgrade-info">
+        <h3><span class="upgrade-icon">${upgrade.icon}</span>${upgrade.name}</h3>
+        <p>${upgrade.desc}</p>
+      </div>
+      <div class="upgrade-price ${canAfford ? "cost-green" : "cost-red"}">${formatNumber(cost)} T</div>
+    `;
     if (upgrade.count > 0) {
       const countBadge = document.createElement("div");
       countBadge.className = "upgrade-count";
@@ -245,6 +257,7 @@ function updateUI() {
   scoreDisplay.innerText = formatNumber(tokens);
   tpsDisplay.innerText   = formatNumber(tokensPerSecond);
   if (stageNumber) stageNumber.innerText = currentStage;
+  updateStageProgress();
   const btns   = document.querySelectorAll(".upgrade-btn");
   const prices = document.querySelectorAll(".upgrade-price");
   upgrades.forEach((upgrade, index) => {
@@ -255,6 +268,18 @@ function updateUI() {
       prices[index].className = `upgrade-price ${canAfford ? "cost-green" : "cost-red"}`;
     }
   });
+}
+
+// Stage progress: how far to next boss (every 10 stages)
+function updateStageProgress() {
+  const bar  = document.getElementById("stageProgressBar");
+  const lbl  = document.getElementById("stageProgressLabel");
+  if (!bar || !lbl) return;
+  const stageInCycle = ((currentStage - 1) % 10) + 1; // 1-10
+  const pct = (stageInCycle / 10) * 100;
+  bar.style.width = pct + "%";
+  const bossIn = 10 - stageInCycle;
+  lbl.innerText = bossIn === 0 ? "👑 BOSS NOW!" : `Boss in ${bossIn} stage${bossIn > 1 ? "s" : ""}`;
 }
 
 function recalculateStats() {
@@ -276,6 +301,12 @@ function initStage() {
   const mIndex = isBossStage ? 9 : (currentStage - 1) % 9;
   aiCore.style.backgroundImage = `url('${monsters[mIndex]}')`;
 
+  // Monster aura color changes per boss stage
+  const aura = document.getElementById("monsterAura");
+  if (aura) {
+    aura.className = "monster-aura" + (isBossStage ? " aura-boss" : "");
+  }
+
   // Stage name (floating element above monster)
   if (stageNameElem) {
     if (isBossStage) {
@@ -286,6 +317,7 @@ function initStage() {
   }
 
   if (stageNumber) stageNumber.innerText = currentStage;
+  updateStageProgress();
 
   // Prestige check
   if (currentStage >= 50 && prestigeSection) {
@@ -332,12 +364,11 @@ function updateHPBar() {
   hpText.innerText = `${formatNumber(monsterHP)} / ${formatNumber(monsterMaxHP)} HP`;
 }
 
-// Position floating HP bar and stage name above the monster
+// Position floating HP bar, stage name, and monster aura above the monster
 function updateFloatingElements() {
   const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
   const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
   const monsterSize = 110;
-  const hpW = 160;
 
   // Floating HP — centered above monster
   if (floatingHP) {
@@ -348,6 +379,12 @@ function updateFloatingElements() {
   if (stageNameElem) {
     stageNameElem.style.left = (mx + monsterSize / 2) + "px";
     stageNameElem.style.top  = (my - 72) + "px";
+  }
+  // Monster Aura — sits behind monster
+  const aura = document.getElementById("monsterAura");
+  if (aura) {
+    aura.style.left = (mx + monsterSize / 2) + "px";
+    aura.style.top  = (my + monsterSize / 2) + "px";
   }
 }
 

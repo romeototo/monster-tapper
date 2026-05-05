@@ -34,20 +34,29 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-block">
+        <div class="stat-block essence-block">
           <div class="stat-label">Essence</div>
-          <div class="stat-value" id="scoreDisplay">0</div>
+          <div class="stat-value stat-essence" id="scoreDisplay">0</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-block">
-          <div class="stat-label">Auto DPS</div>
-          <div class="stat-value accent" id="tpsDisplay">0</div>
+        <div class="stats-sub-row">
+          <div class="stat-block">
+            <div class="stat-label">Auto DPS</div>
+            <div class="stat-value accent" id="tpsDisplay">0</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-block">
+            <div class="stat-label">Stage</div>
+            <div class="stat-value" id="stageNumber">1</div>
+          </div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-block">
-          <div class="stat-label">Stage</div>
-          <div class="stat-value" id="stageNumber">1</div>
+      </div>
+
+      <!-- Stage Progress to Boss -->
+      <div class="stage-progress-wrapper">
+        <div class="stage-progress-track">
+          <div id="stageProgressBar" class="stage-progress-fill"></div>
         </div>
+        <div id="stageProgressLabel" class="stage-progress-label">Boss in 9 stages</div>
       </div>
 
       <div class="combo-display" id="comboDisplay">COMBO x1.0 🔥</div>
@@ -70,6 +79,9 @@
       </div>
       <div id="hpText" class="hp-text">50 / 50 HP</div>
     </div>
+
+    <!-- Monster Aura (behind monster, follows it) -->
+    <div id="monsterAura" class="monster-aura"></div>
 
     <!-- Monster Core -->
     <button class="ai-core" id="aiCore"></button>
