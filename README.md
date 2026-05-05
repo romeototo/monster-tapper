@@ -8,6 +8,8 @@
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/github/last-commit/romeototo/monster-tapper?style=for-the-badge&color=8B5CF6" />
+  <img src="https://img.shields.io/github/license/romeototo/monster-tapper?style=for-the-badge&color=10B981" />
 </p>
 
 <i>👉 <a href="README-th.md">🇹🇭 อ่านรายละเอียดภาษาไทย</a></i><br><br>
@@ -45,6 +47,35 @@ This project showcases several advanced front-end web development techniques:
 - **State Management:** Robust saving/loading system using browser `localStorage` with offline time calculation.
 - **Web Audio API:** Synthesized custom 8-bit sound effects using real-time oscillators instead of static audio files.
 - **Modern UI/UX:** Glassmorphism design, CSS variables for theming, and complex keyframe animations.
+
+## 🗺️ Development Roadmap
+
+- [x] **Phase 1:** Core clicker mechanics & Boss stages
+- [x] **Phase 2:** Visual Overhaul (Game Juice, Screen Shake, CSS Masking)
+- [x] **Phase 3:** RPG Elements (Pets, Relics, Passive Buffs, Achievements)
+- [ ] **Phase 4:** Cloud Save & Authentication Integration
+- [ ] **Phase 5:** Global Leaderboards
+- [ ] **Phase 6:** PWA (Progressive Web App) / Mobile Optimization
+
+## 💻 Local Installation
+
+To run this project locally for development or modding:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/romeototo/monster-tapper.git
+
+# 2. Navigate to the project directory
+cd monster-tapper
+
+# 3. Serve the files using any local web server (e.g., Python)
+python -m http.server 8000
+```
+Then open `http://localhost:8000` in your browser. No build steps required!
+
+## 📜 License
+
+This project is licensed under the **MIT License**. You are free to study, modify, and distribute the code for your own projects. Contributions and Pull Requests are welcome!
 
 ---
 
