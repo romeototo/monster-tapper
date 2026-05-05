@@ -23,21 +23,21 @@ const SAVE_KEY = "ai_tycoon_save";
 let prestigeMultiplier = 1;
 let totalAscensions = 0;
 
-const scoreDisplay    = document.getElementById("scoreDisplay");
-const tpsDisplay      = document.getElementById("tpsDisplay");
-const stageNumber     = document.getElementById("stageNumber");
-const aiCore          = document.getElementById("aiCore");
-const upgradesList    = document.getElementById("upgradesList");
-const comboDisplay    = document.getElementById("comboDisplay");
-const offlineModal    = document.getElementById("offlineModal");
+const scoreDisplay = document.getElementById("scoreDisplay");
+const tpsDisplay = document.getElementById("tpsDisplay");
+const stageNumber = document.getElementById("stageNumber");
+const aiCore = document.getElementById("aiCore");
+const upgradesList = document.getElementById("upgradesList");
+const comboDisplay = document.getElementById("comboDisplay");
+const offlineModal = document.getElementById("offlineModal");
 const offlineEarnings = document.getElementById("offlineEarnings");
-const claimBtn        = document.getElementById("claimBtn");
+const claimBtn = document.getElementById("claimBtn");
 const skillsContainer = document.getElementById("skillsContainer");
 const prestigeSection = document.getElementById("prestigeSection");
-const prestigeBtn     = document.getElementById("prestigeBtn");
-const floatingHP      = document.getElementById("floatingHP");
-const stageNameElem   = document.getElementById("stageName");
-const PANEL_WIDTH     = 380; // px — width of right upgrades panel
+const prestigeBtn = document.getElementById("prestigeBtn");
+const floatingHP = document.getElementById("floatingHP");
+const stageNameElem = document.getElementById("stageName");
+const PANEL_WIDTH = 380; // px — width of right upgrades panel
 
 const upgrades = [
   {
@@ -270,33 +270,37 @@ function renderUpgrades() {
 
 function updateUI() {
   scoreDisplay.innerText = formatNumber(tokens);
-  tpsDisplay.innerText   = formatNumber(tokensPerSecond);
+  tpsDisplay.innerText = formatNumber(tokensPerSecond);
   if (stageNumber) stageNumber.innerText = currentStage;
   const killDisplay = document.getElementById("killCountDisplay");
   if (killDisplay) killDisplay.innerText = formatNumber(totalKills);
   updateStageProgress();
-  const btns   = document.querySelectorAll(".upgrade-btn");
+  const btns = document.querySelectorAll(".upgrade-btn");
   const prices = document.querySelectorAll(".upgrade-price");
   upgrades.forEach((upgrade, index) => {
     const cost = getCost(upgrade);
     const canAfford = tokens >= cost;
     if (btns[index]) {
       btns[index].disabled = !canAfford;
-      prices[index].className = `upgrade-price ${canAfford ? "cost-green" : "cost-red"}`;
+      prices[index].className =
+        `upgrade-price ${canAfford ? "cost-green" : "cost-red"}`;
     }
   });
 }
 
 // Stage progress: how far to next boss (every 10 stages)
 function updateStageProgress() {
-  const bar  = document.getElementById("stageProgressBar");
-  const lbl  = document.getElementById("stageProgressLabel");
+  const bar = document.getElementById("stageProgressBar");
+  const lbl = document.getElementById("stageProgressLabel");
   if (!bar || !lbl) return;
   const stageInCycle = ((currentStage - 1) % 10) + 1; // 1-10
   const pct = (stageInCycle / 10) * 100;
   bar.style.width = pct + "%";
   const bossIn = 10 - stageInCycle;
-  lbl.innerText = bossIn === 0 ? "👑 BOSS NOW!" : `Boss in ${bossIn} stage${bossIn > 1 ? "s" : ""}`;
+  lbl.innerText =
+    bossIn === 0
+      ? "👑 BOSS NOW!"
+      : `Boss in ${bossIn} stage${bossIn > 1 ? "s" : ""}`;
 }
 
 function recalculateStats() {
@@ -311,12 +315,19 @@ function recalculateStats() {
 function initStage() {
   isBossStage = currentStage % 10 === 0;
   const healthMultiplier = isBossStage ? 5 : 1;
-  monsterMaxHP = Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
+  monsterMaxHP =
+    Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
   monsterHP = monsterMaxHP;
 
   // Reset trailing HP bar for new monster
   const hpTrail = document.getElementById("hpTrail");
-  if (hpTrail) { hpTrail.style.transition = "none"; hpTrail.style.width = "100%"; requestAnimationFrame(() => { hpTrail.style.transition = ""; }); }
+  if (hpTrail) {
+    hpTrail.style.transition = "none";
+    hpTrail.style.width = "100%";
+    requestAnimationFrame(() => {
+      hpTrail.style.transition = "";
+    });
+  }
 
   // Monster image — Boss = Chaos Dragon (index 18), Normal = random no-repeat
   let mIndex;
@@ -324,7 +335,7 @@ function initStage() {
     mIndex = 18; // always Chaos Dragon for boss
   } else {
     // Random pick from m0–m17, avoid repeating last shown
-    const pool = [...Array(18).keys()].filter(i => i !== lastMonsterIndex);
+    const pool = [...Array(18).keys()].filter((i) => i !== lastMonsterIndex);
     mIndex = pool[Math.floor(Math.random() * pool.length)];
     lastMonsterIndex = mIndex;
   }
@@ -386,9 +397,9 @@ function updateBiome() {
 }
 
 function updateHPBar() {
-  const hpBar   = document.getElementById("hpBar");
+  const hpBar = document.getElementById("hpBar");
   const hpTrail = document.getElementById("hpTrail");
-  const hpText  = document.getElementById("hpText");
+  const hpText = document.getElementById("hpText");
   if (!hpBar || !hpText) return;
   const pct = Math.max(0, (monsterHP / monsterMaxHP) * 100);
   hpBar.style.width = pct + "%";
@@ -398,15 +409,19 @@ function updateHPBar() {
     const trailPct = parseFloat(hpTrail.style.width) || 100;
     if (trailPct > pct) {
       // Trail stays, then CSS transition slowly catches up
-      setTimeout(() => { hpTrail.style.width = pct + "%"; }, 100);
+      setTimeout(() => {
+        hpTrail.style.width = pct + "%";
+      }, 100);
     } else {
       // Monster healed or new stage - reset trail instantly
       hpTrail.style.width = pct + "%";
     }
   }
   // Color changes: green → yellow → red
-  if (pct > 60) hpBar.style.background = "linear-gradient(90deg, #10b981, #34d399)";
-  else if (pct > 30) hpBar.style.background = "linear-gradient(90deg, #f59e0b, #fbbf24)";
+  if (pct > 60)
+    hpBar.style.background = "linear-gradient(90deg, #10b981, #34d399)";
+  else if (pct > 30)
+    hpBar.style.background = "linear-gradient(90deg, #f59e0b, #fbbf24)";
   else hpBar.style.background = "linear-gradient(90deg, #ef4444, #f97316)";
   hpText.innerText = `${formatNumber(monsterHP)} / ${formatNumber(monsterMaxHP)} HP`;
 }
@@ -414,30 +429,30 @@ function updateHPBar() {
 // Position floating HP bar, stage name, monster aura, and ground shadow
 function updateFloatingElements() {
   const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
-  const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
+  const my = parseFloat(aiCore.style.top) || window.innerHeight / 2;
   const monsterSize = 200; // match CSS size
 
   // Floating HP — centered above monster
   if (floatingHP) {
-    floatingHP.style.left = (mx + monsterSize / 2) + "px";
-    floatingHP.style.top  = (my - 55) + "px";
+    floatingHP.style.left = mx + monsterSize / 2 + "px";
+    floatingHP.style.top = my - 55 + "px";
   }
   // Stage name — above HP bar
   if (stageNameElem) {
-    stageNameElem.style.left = (mx + monsterSize / 2) + "px";
-    stageNameElem.style.top  = (my - 78) + "px";
+    stageNameElem.style.left = mx + monsterSize / 2 + "px";
+    stageNameElem.style.top = my - 78 + "px";
   }
   // Monster Aura — centered on monster
   const aura = document.getElementById("monsterAura");
   if (aura) {
-    aura.style.left = (mx + monsterSize / 2) + "px";
-    aura.style.top  = (my + monsterSize / 2) + "px";
+    aura.style.left = mx + monsterSize / 2 + "px";
+    aura.style.top = my + monsterSize / 2 + "px";
   }
   // Ground Shadow — below monster feet
   const groundShadow = document.getElementById("monsterGroundShadow");
   if (groundShadow) {
-    groundShadow.style.left = (mx + monsterSize / 2) + "px";
-    groundShadow.style.top  = (my + monsterSize + 5) + "px";
+    groundShadow.style.left = mx + monsterSize / 2 + "px";
+    groundShadow.style.top = my + monsterSize + 5 + "px";
   }
 }
 
@@ -510,9 +525,9 @@ function spawnParticles(x, y, color, count = 8) {
 function dealDamage(amount, x, y, isCrit) {
   let multiplier = isGoldRush ? 2 : 1;
   let finalAmount = amount * multiplier;
-  
+
   monsterHP -= amount; // HP ลดเท่าเดิม แต่ได้ตังค์เพิ่ม
-  tokens += finalAmount; 
+  tokens += finalAmount;
   if (x !== null && y !== null) {
     createFloatingNumber(x, y, finalAmount, isCrit);
 
@@ -554,7 +569,8 @@ function dealDamage(amount, x, y, isCrit) {
     );
 
     // Check relic drop from boss
-    if (isBossStage && window.checkRelicDrop) window.checkRelicDrop(currentStage);
+    if (isBossStage && window.checkRelicDrop)
+      window.checkRelicDrop(currentStage);
 
     currentStage++;
     // Mission: Stage reach hook
@@ -565,7 +581,7 @@ function dealDamage(amount, x, y, isCrit) {
   }
   updateHPBar();
   updateUI();
-  
+
   // Kill Streak Logic
   if (monsterHP <= 0) {
     killStreak++;
@@ -599,13 +615,13 @@ function moveBossRandomly() {
   const x = Math.max(40, Math.random() * safeRight);
   const y = Math.max(100, Math.random() * maxY);
   aiCore.style.left = x + "px";
-  aiCore.style.top  = y + "px";
+  aiCore.style.top = y + "px";
   updateFloatingElements();
 }
 
 // ── Custom Animated Weapon Cursor ──
 const weaponCursor = document.getElementById("weaponCursor");
-const weaponImg    = document.getElementById("weaponImg");
+const weaponImg = document.getElementById("weaponImg");
 
 function swapWeapon() {
   const rWeapon = weapons[Math.floor(Math.random() * weapons.length)];
@@ -615,13 +631,14 @@ function swapWeapon() {
 }
 
 // ติดตามเมาส์ — อัปเดตตำแหน่ง cursor แบบ raw (ไม่มี transition เพื่อ smooth)
-let curX = 0, curY = 0;
+let curX = 0,
+  curY = 0;
 document.addEventListener("mousemove", (e) => {
   curX = e.clientX;
   curY = e.clientY;
   if (weaponCursor) {
-    weaponCursor.style.left = (curX - 16) + "px"; // offset ให้หัวค้อนอยู่ตรงปลาย cursor
-    weaponCursor.style.top  = (curY - 16) + "px";
+    weaponCursor.style.left = curX - 16 + "px"; // offset ให้หัวค้อนอยู่ตรงปลาย cursor
+    weaponCursor.style.top = curY - 16 + "px";
   }
 });
 
@@ -647,7 +664,7 @@ setInterval(moveBossRandomly, 2000);
 // เริ่มตำแหน่งตรงกลางโซนซ้าย
 const initX = (window.innerWidth - PANEL_WIDTH) / 2 - 55;
 aiCore.style.left = initX + "px";
-aiCore.style.top  = (window.innerHeight / 2 - 55) + "px";
+aiCore.style.top = window.innerHeight / 2 - 55 + "px";
 updateFloatingElements();
 
 // เมื่อตีมอนสเตอร์!
@@ -676,7 +693,7 @@ aiCore.addEventListener("mousedown", (e) => {
     // ⏱️ Hit Stop (หยุดเวลาสั้นๆ พร้อมเปลี่ยนสี)
     aiCore.classList.add("hit-stop");
     setTimeout(() => aiCore.classList.remove("hit-stop"), 80);
-    
+
     // Combo effect without shake (since earthquake handles it)
     comboDisplay.style.opacity = 1;
     comboDisplay.innerText = `Combo x${combo.toFixed(1)}! 🔥`;

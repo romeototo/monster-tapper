@@ -29,7 +29,7 @@
 }
 .streak-track {
   height: 6px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 5px;
@@ -44,12 +44,16 @@
   animation: streakShimmer 1.5s infinite;
 }
 @keyframes streakShimmer {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 .streak-hint {
   font-size: 0.55rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.35);
   letter-spacing: 0.5px;
   text-align: center;
 }
@@ -58,7 +62,7 @@
    DAILY MISSIONS PANEL
 ═══════════════════════════════════════════════ */
 .daily-missions-panel {
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 12px;
@@ -91,11 +95,13 @@
 
 /* Individual Mission Row */
 .mission-row {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--glass-border);
   border-radius: 10px;
   padding: 10px 12px;
-  transition: border-color 0.3s, background 0.3s;
+  transition:
+    border-color 0.3s,
+    background 0.3s;
 }
 .mission-row.completed {
   background: rgba(16, 185, 129, 0.08);
@@ -124,7 +130,7 @@
 }
 .mission-progress-track {
   height: 4px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 4px;
@@ -159,7 +165,9 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 .mission-claim-btn:hover {
   transform: scale(1.05);
@@ -174,9 +182,15 @@
 
 /* Claim Animation */
 @keyframes claimPop {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.4); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .mission-claiming {
   animation: claimPop 0.4s ease;

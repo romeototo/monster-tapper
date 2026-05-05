@@ -27,7 +27,7 @@
 - **♻️ Ascension System:** Reached Stage 50? Ascend to restart your journey with a permanent global damage multiplier!
 - **⚡ Active Skills & Passives:** Unleash abilities like **Berserk** or **Midas Touch**, and invest in permanent passive buffs.
 - **🛡️ Relics & Artifacts:** Defeat elite bosses to collect powerful relics that boost your stats.
-- **🐾 Pet Companions:** Hatch and equip pets like the *Dragon Whelp* or *Spirit Fox* to aid you in battle.
+- **🐾 Pet Companions:** Hatch and equip pets like the _Dragon Whelp_ or _Spirit Fox_ to aid you in battle.
 - **✨ Premium Game Juice:** Enhanced visual feedback including dynamic **Screen Shake**, **Trailing HP Bars**, **Ground Shadows**, and neon typography.
 - **🌌 Dynamic Biomes:** The game environment dynamically shifts through different themes (Forest, Volcano, Void, Cyber) as you progress.
 - **💾 Offline Progression:** Your hired heroes continue to farm essence even when you close the browser.
@@ -62,6 +62,7 @@ This project showcases several advanced front-end web development techniques:
 ## 🛠️ Customization & Modding
 
 The codebase is highly modular. Want to add your own content? It's easy!
+
 - **Add a new Pet:** Open `right-panel.js` and add a new object to the `mtPetData` array. The game will automatically render it in the Pets tab!
 - **Add a new Boss Relic:** Simply append a new entry to the `mtRelicData` array in `right-panel.js`.
 
@@ -88,6 +89,7 @@ cd monster-tapper
 # 3. Serve the files using any local web server (e.g., Python)
 python -m http.server 8000
 ```
+
 Then open `http://localhost:8000` in your browser. No build steps required!
 
 ## 📜 License

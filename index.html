@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monster Tapper - Premium</title>
-    <meta name="description" content="Monster Tapper Pro — A premium idle clicker game. Tap, upgrade, and ascend to destroy endless monsters." />
+    <meta
+      name="description"
+      content="Monster Tapper Pro — A premium idle clicker game. Tap, upgrade, and ascend to destroy endless monsters."
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;800&display=swap"
       rel="stylesheet"
@@ -14,7 +17,6 @@
     <link rel="stylesheet" href="right-panel.css" />
   </head>
   <body>
-
     <!-- Background Canvas (star field, meteors, runes, ripples) -->
     <div id="goldRushNotice">💰 GOLD RUSH ACTIVE x2 💰</div>
     <canvas id="bgCanvas" class="bg-canvas"></canvas>
@@ -66,7 +68,9 @@
       <div class="stage-progress-wrapper">
         <div class="stage-progress-header">
           <span class="stage-progress-title">⚔️ Next Boss</span>
-          <span id="stageProgressLabel" class="stage-progress-label">Boss in 9 stages</span>
+          <span id="stageProgressLabel" class="stage-progress-label"
+            >Boss in 9 stages</span
+          >
         </div>
         <div class="stage-progress-track">
           <div id="stageProgressBar" class="stage-progress-fill"></div>
@@ -76,13 +80,13 @@
       <div class="combo-display" id="comboDisplay">COMBO x1.0 🔥</div>
 
       <!-- Prestige Section -->
-      <div id="prestigeSection" class="prestige-panel" style="display:none;">
+      <div id="prestigeSection" class="prestige-panel" style="display: none">
         <span class="prestige-label">⚡ LEGACY READY</span>
         <button id="prestigeBtn" class="prestige-btn-small">Ascend Now</button>
       </div>
 
       <!-- Kill Streak Progress Bar -->
-      <div class="streak-wrapper" id="streakWrapper" style="display:none;">
+      <div class="streak-wrapper" id="streakWrapper" style="display: none">
         <div class="streak-header">
           <span class="streak-label">🔥 Kill Streak</span>
           <span id="streakCount" class="streak-count">0 / 5</span>
@@ -97,13 +101,14 @@
       <div class="daily-missions-panel">
         <div class="missions-header">
           <span class="missions-title">📋 Daily Missions</span>
-          <span id="missionsResetTimer" class="missions-reset">Resets in: --:--:--</span>
+          <span id="missionsResetTimer" class="missions-reset"
+            >Resets in: --:--:--</span
+          >
         </div>
         <div id="missionsList" class="missions-list">
           <!-- Injected by JS -->
         </div>
       </div>
-
     </div>
 
     <!-- ===== Floating Stage Name (above monster, updated by JS) ===== -->
@@ -111,7 +116,9 @@
 
     <!-- ===== Floating HP Bar (follows monster, updated by JS) ===== -->
     <div id="floatingHP" class="floating-hp">
-      <div id="bossTimer" class="boss-timer" style="display:none;">⏱️ 30.0s</div>
+      <div id="bossTimer" class="boss-timer" style="display: none">
+        ⏱️ 30.0s
+      </div>
       <div class="hp-track">
         <div id="hpTrail" class="hp-trail"></div>
         <div id="hpBar" class="hp-fill"></div>
@@ -131,11 +138,41 @@
     <!-- ===== RIGHT PANEL: Tabbed System ===== -->
     <div class="upgrades-panel">
       <div class="panel-tabs">
-        <button class="panel-tab active" data-tab="army" onclick="switchPanelTab('army')"><span class="tab-icon">⚔️</span>Army</button>
-        <button class="panel-tab" data-tab="buffs" onclick="switchPanelTab('buffs')"><span class="tab-icon">🔮</span>Buffs</button>
-        <button class="panel-tab" data-tab="relics" onclick="switchPanelTab('relics')"><span class="tab-icon">💎</span>Relics</button>
-        <button class="panel-tab" data-tab="pets" onclick="switchPanelTab('pets')"><span class="tab-icon">🐾</span>Pets</button>
-        <button class="panel-tab" data-tab="stats" onclick="switchPanelTab('stats')"><span class="tab-icon">📊</span>Stats</button>
+        <button
+          class="panel-tab active"
+          data-tab="army"
+          onclick="switchPanelTab('army')"
+        >
+          <span class="tab-icon">⚔️</span>Army
+        </button>
+        <button
+          class="panel-tab"
+          data-tab="buffs"
+          onclick="switchPanelTab('buffs')"
+        >
+          <span class="tab-icon">🔮</span>Buffs
+        </button>
+        <button
+          class="panel-tab"
+          data-tab="relics"
+          onclick="switchPanelTab('relics')"
+        >
+          <span class="tab-icon">💎</span>Relics
+        </button>
+        <button
+          class="panel-tab"
+          data-tab="pets"
+          onclick="switchPanelTab('pets')"
+        >
+          <span class="tab-icon">🐾</span>Pets
+        </button>
+        <button
+          class="panel-tab"
+          data-tab="stats"
+          onclick="switchPanelTab('stats')"
+        >
+          <span class="tab-icon">📊</span>Stats
+        </button>
       </div>
 
       <!-- Tab: Army (original upgrades) -->

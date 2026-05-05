@@ -72,7 +72,10 @@ const MISSION_TEMPLATES = [
 // Pick 3 missions for today (seeded by date)
 function getTodaysMissions() {
   const today = new Date();
-  const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  const seed =
+    today.getFullYear() * 10000 +
+    (today.getMonth() + 1) * 100 +
+    today.getDate();
   // Simple deterministic shuffle using the seed
   const shuffled = [...MISSION_TEMPLATES].sort((a, b) => {
     const ha = simpleHash(a.id + seed);
@@ -92,9 +95,9 @@ function simpleHash(str) {
 // ─── State ────────────────────────────────────────────────────
 const MISSION_SAVE_KEY = "mt_daily_missions";
 let dailyMissions = [];
-let missionProgress = {};   // { id: { progress, claimed } }
-let upgradesBought = 0;     // tracked here
-let goldRushTriggered = 0;  // tracked here
+let missionProgress = {}; // { id: { progress, claimed } }
+let upgradesBought = 0; // tracked here
+let goldRushTriggered = 0; // tracked here
 
 function loadMissionState() {
   const saved = localStorage.getItem(MISSION_SAVE_KEY);
@@ -104,28 +107,33 @@ function loadMissionState() {
       const data = JSON.parse(saved);
       if (data.date === todayStr) {
         missionProgress = data.progress || {};
-        upgradesBought  = data.upgradesBought || 0;
+        upgradesBought = data.upgradesBought || 0;
         goldRushTriggered = data.goldRushTriggered || 0;
       }
       // If different date → fresh start (new daily missions)
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      /* ignore */
+    }
   }
   dailyMissions = getTodaysMissions();
 }
 
 function saveMissionState() {
   const todayStr = new Date().toDateString();
-  localStorage.setItem(MISSION_SAVE_KEY, JSON.stringify({
-    date: todayStr,
-    progress: missionProgress,
-    upgradesBought,
-    goldRushTriggered,
-  }));
+  localStorage.setItem(
+    MISSION_SAVE_KEY,
+    JSON.stringify({
+      date: todayStr,
+      progress: missionProgress,
+      upgradesBought,
+      goldRushTriggered,
+    }),
+  );
 }
 
 // ─── Progress Trackers (called from script.js via window hooks) ───
-window.missionOnKill = function() {
-  dailyMissions.forEach(m => {
+window.missionOnKill = function () {
+  dailyMissions.forEach((m) => {
     if (m.type === "kills" && !getMissionState(m).claimed) {
       const st = getMissionState(m);
       if (st.progress < m.target) {
@@ -137,8 +145,8 @@ window.missionOnKill = function() {
   });
 };
 
-window.missionOnStageReach = function(stage) {
-  dailyMissions.forEach(m => {
+window.missionOnStageReach = function (stage) {
+  dailyMissions.forEach((m) => {
     if (m.type === "stage" && !getMissionState(m).claimed) {
       const st = getMissionState(m);
       if (stage >= m.target && st.progress < m.target) {
@@ -150,9 +158,9 @@ window.missionOnStageReach = function(stage) {
   });
 };
 
-window.missionOnGoldRush = function() {
+window.missionOnGoldRush = function () {
   goldRushTriggered++;
-  dailyMissions.forEach(m => {
+  dailyMissions.forEach((m) => {
     if (m.type === "goldrush" && !getMissionState(m).claimed) {
       const st = getMissionState(m);
       st.progress = goldRushTriggered;
@@ -162,9 +170,9 @@ window.missionOnGoldRush = function() {
   });
 };
 
-window.missionOnUpgradeBuy = function() {
+window.missionOnUpgradeBuy = function () {
   upgradesBought++;
-  dailyMissions.forEach(m => {
+  dailyMissions.forEach((m) => {
     if (m.type === "upgrades" && !getMissionState(m).claimed) {
       const st = getMissionState(m);
       st.progress = upgradesBought;
@@ -187,7 +195,7 @@ function renderMissions() {
   if (!list) return;
   list.innerHTML = "";
 
-  dailyMissions.forEach(m => {
+  dailyMissions.forEach((m) => {
     const st = getMissionState(m);
     const pct = Math.min(100, (st.progress / m.target) * 100);
     const isDone = st.progress >= m.target;
@@ -206,11 +214,12 @@ function renderMissions() {
       </div>
       <div class="mission-footer">
         <span class="mission-progress-text">${formatMissionProgress(st.progress, m.target, m.type)}</span>
-        ${isDone && !isClaimed
-          ? `<button class="mission-claim-btn" onclick="claimMission('${m.id}')">CLAIM!</button>`
-          : isClaimed
-          ? `<span class="mission-done-badge">✓ Claimed</span>`
-          : ""
+        ${
+          isDone && !isClaimed
+            ? `<button class="mission-claim-btn" onclick="claimMission('${m.id}')">CLAIM!</button>`
+            : isClaimed
+              ? `<span class="mission-done-badge">✓ Claimed</span>`
+              : ""
         }
       </div>
     `;
@@ -219,16 +228,19 @@ function renderMissions() {
 }
 
 function formatMissionProgress(progress, target, type) {
-  if (type === "kills")    return `${Math.min(progress, target)} / ${target} kills`;
-  if (type === "stage")    return `Stage ${progress} / ${target}`;
-  if (type === "goldrush") return `${Math.min(progress, target)} / ${target} triggered`;
-  if (type === "upgrades") return `${Math.min(progress, target)} / ${target} bought`;
+  if (type === "kills")
+    return `${Math.min(progress, target)} / ${target} kills`;
+  if (type === "stage") return `Stage ${progress} / ${target}`;
+  if (type === "goldrush")
+    return `${Math.min(progress, target)} / ${target} triggered`;
+  if (type === "upgrades")
+    return `${Math.min(progress, target)} / ${target} bought`;
   return `${progress} / ${target}`;
 }
 
 // ─── Claim Reward ─────────────────────────────────────────────
-window.claimMission = function(missionId) {
-  const m = dailyMissions.find(x => x.id === missionId);
+window.claimMission = function (missionId) {
+  const m = dailyMissions.find((x) => x.id === missionId);
   if (!m) return;
   const st = getMissionState(m);
   if (st.claimed || st.progress < m.target) return;
@@ -245,7 +257,7 @@ window.claimMission = function(missionId) {
         window.innerHeight / 2,
         m.reward,
         true,
-        "MISSION! +"
+        "MISSION! +",
       );
     }
     if (typeof updateUI === "function") updateUI();
@@ -255,7 +267,7 @@ window.claimMission = function(missionId) {
 
   // Animate the row
   const rows = document.querySelectorAll(".mission-row");
-  rows.forEach(r => {
+  rows.forEach((r) => {
     if (r.innerHTML.includes(m.id) || r.innerHTML.includes(m.name)) {
       r.classList.add("mission-claiming");
       setTimeout(() => r.classList.remove("mission-claiming"), 500);
@@ -266,10 +278,10 @@ window.claimMission = function(missionId) {
 };
 
 // ─── Streak Bar UI ────────────────────────────────────────────
-window.updateStreakBar = function(streak, max) {
+window.updateStreakBar = function (streak, max) {
   const wrapper = document.getElementById("streakWrapper");
-  const bar     = document.getElementById("streakBar");
-  const count   = document.getElementById("streakCount");
+  const bar = document.getElementById("streakBar");
+  const count = document.getElementById("streakCount");
   if (!wrapper || !bar || !count) return;
 
   if (streak > 0) {
@@ -286,7 +298,7 @@ window.updateStreakBar = function(streak, max) {
 function updateResetTimer() {
   const el = document.getElementById("missionsResetTimer");
   if (!el) return;
-  const now  = new Date();
+  const now = new Date();
   const next = new Date();
   next.setHours(24, 0, 0, 0); // midnight tonight
   const diff = Math.max(0, next - now);
