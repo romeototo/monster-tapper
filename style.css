@@ -129,22 +129,36 @@ body::after {
   display: flex;
   align-items: center;
   gap: 8px;
+  animation: brandBreath 3s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(94,106,210,0.4);
+}
+@keyframes brandBreath {
+  0%,100% { text-shadow: 0 0 20px rgba(94,106,210,0.3), 0 0 40px rgba(94,106,210,0.1); filter: brightness(1); }
+  50%     { text-shadow: 0 0 30px rgba(94,106,210,0.6), 0 0 60px rgba(94,106,210,0.25); filter: brightness(1.15); }
 }
 .brand-pro {
   font-size: 0.65rem;
   font-weight: 700;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid var(--glass-border);
+  background: linear-gradient(135deg, rgba(94,106,210,0.2), rgba(168,177,255,0.1));
+  border: 1px solid rgba(94,106,210,0.3);
   padding: 2px 8px;
   border-radius: 6px;
-  color: var(--text-muted);
+  color: #a8b1ff;
   letter-spacing: 2px;
   vertical-align: middle;
+  text-shadow: 0 0 8px rgba(168,177,255,0.5);
 }
 .text-glow {
-  background: linear-gradient(120deg, #5e6ad2, #a8b1ff);
+  background: linear-gradient(120deg, #7c83e8, #c4cbff, #5e6ad2, #a8b1ff);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: textGlowShift 4s ease-in-out infinite;
+}
+@keyframes textGlowShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .stats-row {
@@ -328,14 +342,28 @@ body::after {
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+/* Trailing damage bar (white/yellow delayed bar behind real HP) */
+.hp-trail {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(251,191,36,0.7), rgba(255,255,255,0.5));
+  border-radius: 10px;
+  transition: width 0.8s ease-out 0.2s;
+  z-index: 0;
 }
 .hp-fill {
+  position: relative;
   height: 100%;
   width: 100%;
   background: linear-gradient(90deg, #ef4444, #f97316);
   border-radius: 10px;
   transition: width 0.15s cubic-bezier(0, 0, 0.2, 1);
   box-shadow: 0 0 8px rgba(239,68,68,0.6);
+  z-index: 1;
 }
 .hp-text {
   text-align: center;
@@ -417,8 +445,12 @@ body { cursor: none !important; }
   outline: none;
   z-index: 50;
   mix-blend-mode: screen;
+  /* Radial mask: fades black edges to transparent smoothly */
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 45%, transparent 72%);
+  mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 45%, transparent 72%);
   filter: drop-shadow(0 0 22px rgba(94,106,210,0.8))
-          drop-shadow(0 0 44px rgba(94,106,210,0.35));
+          drop-shadow(0 0 44px rgba(94,106,210,0.35))
+          saturate(1.2) brightness(1.1);
   transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               top  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               filter 0.2s;
@@ -429,10 +461,34 @@ body { cursor: none !important; }
 }
 
 /* Biome-specific monster glow — transitions smoothly */
-body.theme-forest  .ai-core { filter: drop-shadow(0 0 22px rgba(16,185,129,1))  drop-shadow(0 0 55px rgba(16,185,129,0.4)); }
-body.theme-volcano .ai-core { filter: drop-shadow(0 0 22px rgba(244,63,94,1))   drop-shadow(0 0 55px rgba(244,63,94,0.4)); }
-body.theme-void    .ai-core { filter: drop-shadow(0 0 22px rgba(139,92,246,1))  drop-shadow(0 0 55px rgba(139,92,246,0.4)); }
-body.theme-cyber   .ai-core { filter: drop-shadow(0 0 22px rgba(6,182,212,1))   drop-shadow(0 0 55px rgba(6,182,212,0.4)); }
+body.theme-forest  .ai-core { filter: drop-shadow(0 0 22px rgba(16,185,129,1))  drop-shadow(0 0 55px rgba(16,185,129,0.4)) saturate(1.2); }
+body.theme-volcano .ai-core { filter: drop-shadow(0 0 22px rgba(244,63,94,1))   drop-shadow(0 0 55px rgba(244,63,94,0.4)) saturate(1.2); }
+body.theme-void    .ai-core { filter: drop-shadow(0 0 22px rgba(139,92,246,1))  drop-shadow(0 0 55px rgba(139,92,246,0.4)) saturate(1.2); }
+body.theme-cyber   .ai-core { filter: drop-shadow(0 0 22px rgba(6,182,212,1))   drop-shadow(0 0 55px rgba(6,182,212,0.4)) saturate(1.2); }
+
+/* ── Ground Shadow Aura under monster ── */
+.monster-ground-shadow {
+  position: fixed;
+  width: 180px;
+  height: 30px;
+  pointer-events: none;
+  z-index: 44;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(94,106,210,0.5) 0%, rgba(94,106,210,0.15) 40%, transparent 70%);
+  filter: blur(8px);
+  transform: translateX(-50%);
+  transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              top  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: groundShadowPulse 2.5s ease-in-out infinite;
+}
+@keyframes groundShadowPulse {
+  0%,100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+  50%     { opacity: 0.9; transform: translateX(-50%) scaleX(1.15); }
+}
+body.theme-forest  .monster-ground-shadow { background: radial-gradient(ellipse, rgba(16,185,129,0.5) 0%, transparent 70%); }
+body.theme-volcano .monster-ground-shadow { background: radial-gradient(ellipse, rgba(244,63,94,0.5)  0%, transparent 70%); }
+body.theme-void    .monster-ground-shadow { background: radial-gradient(ellipse, rgba(139,92,246,0.5) 0%, transparent 70%); }
+body.theme-cyber   .monster-ground-shadow { background: radial-gradient(ellipse, rgba(6,182,212,0.5)  0%, transparent 70%); }
 
 /* Animation สำหรับมอนสเตอร์เกิดใหม่ */
 .monster-spawn {
@@ -541,14 +597,30 @@ body.theme-cyber .monster-aura   { background: radial-gradient(circle, rgba(6,18
   padding: 12px 14px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.22s ease;
   color: var(--text-main);
   text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+/* Shimmer sweep on hover */
+.upgrade-btn::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+.upgrade-btn:hover:not(:disabled)::after {
+  left: 150%;
 }
 .upgrade-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--glass-border-hover);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(94,106,210,0.4);
+  box-shadow: 0 4px 20px rgba(94,106,210,0.15), 0 0 1px rgba(94,106,210,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  transform: translateY(-1px);
 }
 .upgrade-btn:active:not(:disabled) { transform: scale(0.97); }
 .upgrade-btn:disabled { opacity: 0.28; cursor: not-allowed; filter: grayscale(1); }

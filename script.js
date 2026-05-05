@@ -314,6 +314,10 @@ function initStage() {
   monsterMaxHP = Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
   monsterHP = monsterMaxHP;
 
+  // Reset trailing HP bar for new monster
+  const hpTrail = document.getElementById("hpTrail");
+  if (hpTrail) { hpTrail.style.transition = "none"; hpTrail.style.width = "100%"; requestAnimationFrame(() => { hpTrail.style.transition = ""; }); }
+
   // Monster image — Boss = Chaos Dragon (index 18), Normal = random no-repeat
   let mIndex;
   if (isBossStage) {
@@ -382,11 +386,24 @@ function updateBiome() {
 }
 
 function updateHPBar() {
-  const hpBar  = document.getElementById("hpBar");
-  const hpText = document.getElementById("hpText");
+  const hpBar   = document.getElementById("hpBar");
+  const hpTrail = document.getElementById("hpTrail");
+  const hpText  = document.getElementById("hpText");
   if (!hpBar || !hpText) return;
   const pct = Math.max(0, (monsterHP / monsterMaxHP) * 100);
   hpBar.style.width = pct + "%";
+  // Trailing bar: updates with delay (CSS transition handles animation)
+  if (hpTrail) {
+    // Only update trail if it's wider than current HP (damage dealt)
+    const trailPct = parseFloat(hpTrail.style.width) || 100;
+    if (trailPct > pct) {
+      // Trail stays, then CSS transition slowly catches up
+      setTimeout(() => { hpTrail.style.width = pct + "%"; }, 100);
+    } else {
+      // Monster healed or new stage - reset trail instantly
+      hpTrail.style.width = pct + "%";
+    }
+  }
   // Color changes: green → yellow → red
   if (pct > 60) hpBar.style.background = "linear-gradient(90deg, #10b981, #34d399)";
   else if (pct > 30) hpBar.style.background = "linear-gradient(90deg, #f59e0b, #fbbf24)";
@@ -394,7 +411,7 @@ function updateHPBar() {
   hpText.innerText = `${formatNumber(monsterHP)} / ${formatNumber(monsterMaxHP)} HP`;
 }
 
-// Position floating HP bar, stage name, and monster aura
+// Position floating HP bar, stage name, monster aura, and ground shadow
 function updateFloatingElements() {
   const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
   const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
@@ -415,6 +432,12 @@ function updateFloatingElements() {
   if (aura) {
     aura.style.left = (mx + monsterSize / 2) + "px";
     aura.style.top  = (my + monsterSize / 2) + "px";
+  }
+  // Ground Shadow — below monster feet
+  const groundShadow = document.getElementById("monsterGroundShadow");
+  if (groundShadow) {
+    groundShadow.style.left = (mx + monsterSize / 2) + "px";
+    groundShadow.style.top  = (my + monsterSize + 5) + "px";
   }
 }
 
@@ -498,6 +521,7 @@ function dealDamage(amount, x, y, isCrit) {
       spawnParticles(x, y, "#fbbf24", 20); // ประกายทอง
       spawnParticles(x, y, "#ffffff", 10); // สะเก็ดแสงสว่าง
       triggerFlash();
+      triggerScreenShake();
       if (window.triggerEnergyPulse) window.triggerEnergyPulse(x, y);
     } else {
       spawnParticles(x, y, "var(--primary)", 8);
@@ -886,6 +910,26 @@ function triggerFlash() {
   overlay.classList.remove("flash-anim");
   void overlay.offsetWidth;
   overlay.classList.add("flash-anim");
+}
+
+// Screen Shake on Critical Hit — visceral impact feel
+function triggerScreenShake() {
+  const intensity = 6;
+  const duration = 200;
+  const start = performance.now();
+  function shake(now) {
+    const elapsed = now - start;
+    if (elapsed > duration) {
+      document.body.style.transform = "";
+      return;
+    }
+    const decay = 1 - elapsed / duration;
+    const dx = (Math.random() - 0.5) * intensity * 2 * decay;
+    const dy = (Math.random() - 0.5) * intensity * 2 * decay;
+    document.body.style.transform = `translate(${dx}px, ${dy}px)`;
+    requestAnimationFrame(shake);
+  }
+  requestAnimationFrame(shake);
 }
 
 function ascend() {
