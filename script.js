@@ -120,19 +120,20 @@ const activeSkills = [
   },
 ];
 
-// --- Generated Art Assets ---
+// --- Generated Art Assets (Epic transparent-bg monsters) ---
 const monsters = [
-  "assets/m1_1777370042685.png",
-  "assets/m2_1777370058399.png",
-  "assets/m3_1777370073259.png",
-  "assets/m4_1777370087803.png",
-  "assets/m5_1777370102613.png",
-  "assets/m6_1777370116923.png",
-  "assets/m7_1777370132267.png",
-  "assets/m8_1777370147464.png",
-  "assets/m9_1777370161632.png",
-  "assets/m10_1777370177406.png",
+  "assets/m1_crystal_golem.png",      // Crystal Golem
+  "assets/m2_neon_dragon.png",        // Neon Cyber Dragon
+  "assets/m3_lava_titan.png",         // Lava Titan
+  "assets/m4_void_phantom.png",       // Void Phantom
+  "assets/m5_storm_phoenix.png",      // Storm Phoenix
+  "assets/m6_toxic_troll.png",        // Toxic Troll
+  "assets/m7_frost_queen.png",        // Frost Queen
+  "assets/m8_shadow_necromancer.png", // Shadow Necromancer
+  "assets/m9_golden_demon.png",       // Golden Demon (mini-boss)
+  "assets/m10_chaos_dragon.png",      // Chaos Dragon (Elite Boss)
 ];
+let lastMonsterIndex = -1; // track last shown to avoid repeat
 
 const weapons = [
   "assets/cursor_w1_1777370190416.png",
@@ -297,8 +298,16 @@ function initStage() {
   monsterMaxHP = Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
   monsterHP = monsterMaxHP;
 
-  // Monster image
-  const mIndex = isBossStage ? 9 : (currentStage - 1) % 9;
+  // Monster image — Boss = Chaos Dragon (9), Normal = random no-repeat
+  let mIndex;
+  if (isBossStage) {
+    mIndex = 9; // always Chaos Dragon for boss
+  } else {
+    // Random pick from m0–m8, avoid repeating last shown
+    const pool = [...Array(9).keys()].filter(i => i !== lastMonsterIndex);
+    mIndex = pool[Math.floor(Math.random() * pool.length)];
+    lastMonsterIndex = mIndex;
+  }
   aiCore.style.backgroundImage = `url('${monsters[mIndex]}')`;
 
   // Monster aura color changes per boss stage
