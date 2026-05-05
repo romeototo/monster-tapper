@@ -543,6 +543,8 @@ function dealDamage(amount, x, y, isCrit) {
     const baseBonus = Math.floor(monsterMaxHP * 0.5);
     const bonus = isGoldRush ? baseBonus * 2 : baseBonus;
     tokens += bonus;
+    // Track essence for stats
+    if (window.trackEssence) window.trackEssence(bonus);
     createFloatingNumber(
       window.innerWidth / 2,
       window.innerHeight / 2,
@@ -550,6 +552,9 @@ function dealDamage(amount, x, y, isCrit) {
       true,
       "CLEARED! +",
     );
+
+    // Check relic drop from boss
+    if (isBossStage && window.checkRelicDrop) window.checkRelicDrop(currentStage);
 
     currentStage++;
     // Mission: Stage reach hook

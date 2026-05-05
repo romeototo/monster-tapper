@@ -11,6 +11,7 @@
     />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="missions.css" />
+    <link rel="stylesheet" href="right-panel.css" />
   </head>
   <body>
 
@@ -127,14 +128,44 @@
     <!-- Monster Core -->
     <button class="ai-core" id="aiCore"></button>
 
-    <!-- ===== RIGHT PANEL: Upgrades ===== -->
+    <!-- ===== RIGHT PANEL: Tabbed System ===== -->
     <div class="upgrades-panel">
-      <div class="upgrades-header">
-        <h2 class="section-title">⚔️ Barracks &amp; Arsenal</h2>
-        <div class="ascension-badge" id="ascensionBadge" style="display:none;"></div>
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-tab="army" onclick="switchPanelTab('army')"><span class="tab-icon">⚔️</span>Army</button>
+        <button class="panel-tab" data-tab="buffs" onclick="switchPanelTab('buffs')"><span class="tab-icon">🔮</span>Buffs</button>
+        <button class="panel-tab" data-tab="relics" onclick="switchPanelTab('relics')"><span class="tab-icon">💎</span>Relics</button>
+        <button class="panel-tab" data-tab="pets" onclick="switchPanelTab('pets')"><span class="tab-icon">🐾</span>Pets</button>
+        <button class="panel-tab" data-tab="stats" onclick="switchPanelTab('stats')"><span class="tab-icon">📊</span>Stats</button>
       </div>
-      <div class="upgrades-list" id="upgradesList">
-        <!-- Injected via JS -->
+
+      <!-- Tab: Army (original upgrades) -->
+      <div class="tab-content active" id="tab-army">
+        <div class="upgrades-list" id="upgradesList"></div>
+      </div>
+
+      <!-- Tab: Passive Buffs -->
+      <div class="tab-content" id="tab-buffs">
+        <div id="buffsList"></div>
+      </div>
+
+      <!-- Tab: Relics -->
+      <div class="tab-content" id="tab-relics">
+        <div class="stats-section-title">🏆 Boss Drops</div>
+        <div class="relics-grid" id="relicsGrid"></div>
+        <div class="panel-section-divider"></div>
+        <div class="stats-section-title">🎖️ Achievements</div>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+      </div>
+
+      <!-- Tab: Pets -->
+      <div class="tab-content" id="tab-pets">
+        <div class="stats-section-title">🐾 Companions</div>
+        <div id="petsList"></div>
+      </div>
+
+      <!-- Tab: Stats -->
+      <div class="tab-content" id="tab-stats">
+        <div class="stats-dashboard" id="statsDashboard"></div>
       </div>
     </div>
 
@@ -157,5 +188,6 @@
     <script src="script.js"></script>
     <script src="bg-engine.js"></script>
     <script src="missions.js"></script>
+    <script src="right-panel.js"></script>
   </body>
 </html>
