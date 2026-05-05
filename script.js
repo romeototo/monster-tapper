@@ -1,4 +1,8 @@
-let tokens = 0;
+let totalKills = 0; // จำนวนที่ฆ่าได้ทั้งหมด
+let killStreak = 0;
+let streakTimer = 0; // วิที่เหลือสำหรับ streak
+let isGoldRush = false;
+let goldRushTimer = 0; // วิที่เหลือสำหรับ Gold Rush
 let tokensPerSecond = 0;
 let clickPower = 1;
 
@@ -258,6 +262,8 @@ function updateUI() {
   scoreDisplay.innerText = formatNumber(tokens);
   tpsDisplay.innerText   = formatNumber(tokensPerSecond);
   if (stageNumber) stageNumber.innerText = currentStage;
+  const killDisplay = document.getElementById("killCountDisplay");
+  if (killDisplay) killDisplay.innerText = formatNumber(totalKills);
   updateStageProgress();
   const btns   = document.querySelectorAll(".upgrade-btn");
   const prices = document.querySelectorAll(".upgrade-price");
@@ -309,6 +315,11 @@ function initStage() {
     lastMonsterIndex = mIndex;
   }
   aiCore.style.backgroundImage = `url('${monsters[mIndex]}')`;
+
+  // Trigger Entrance Animation
+  aiCore.classList.remove("monster-spawn");
+  void aiCore.offsetWidth; // Trigger reflow
+  aiCore.classList.add("monster-spawn");
 
   // Monster aura color changes per boss stage
   const aura = document.getElementById("monsterAura");
@@ -464,10 +475,13 @@ function spawnParticles(x, y, color, count = 8) {
 }
 
 function dealDamage(amount, x, y, isCrit) {
-  monsterHP -= amount;
-  tokens += amount; // 1 Damage = 1 Token
+  let multiplier = isGoldRush ? 2 : 1;
+  let finalAmount = amount * multiplier;
+  
+  monsterHP -= amount; // HP ลดเท่าเดิม แต่ได้ตังค์เพิ่ม
+  tokens += finalAmount; 
   if (x !== null && y !== null) {
-    createFloatingNumber(x, y, amount, isCrit);
+    createFloatingNumber(x, y, finalAmount, isCrit);
 
     if (isCrit) {
       spawnParticles(x, y, "#ef4444", 30); // ระเบิดเลือดแดง
@@ -487,10 +501,13 @@ function dealDamage(amount, x, y, isCrit) {
 
   if (monsterHP <= 0) {
     // Monster Killed
+    totalKills++;
+    updateUI();
     playGolden();
     spawnCoins(); // ฝนเหรียญทอง!
 
-    const bonus = Math.floor(monsterMaxHP * 0.5);
+    const baseBonus = Math.floor(monsterMaxHP * 0.5);
+    const bonus = isGoldRush ? baseBonus * 2 : baseBonus;
     tokens += bonus;
     createFloatingNumber(
       window.innerWidth / 2,
@@ -507,6 +524,24 @@ function dealDamage(amount, x, y, isCrit) {
   }
   updateHPBar();
   updateUI();
+  
+  // Kill Streak Logic
+  if (monsterHP <= 0) {
+    killStreak++;
+    streakTimer = 8; // มีเวลา 8 วิในการฆ่าตัวต่อไป
+    if (killStreak >= 5 && !isGoldRush) {
+      triggerGoldRush();
+    }
+  }
+}
+
+function triggerGoldRush() {
+  isGoldRush = true;
+  goldRushTimer = 20; // 20 seconds of glory
+  document.body.classList.add("gold-rush-active");
+  playGolden();
+  // Reset streak after trigger
+  killStreak = 0;
 }
 
 // Monster zone: left side only, safe margins for 160px monster
@@ -669,6 +704,7 @@ function buyUpgrade(upgrade) {
 // ----------------- Save / Load System & Offline Progress -----------------
 function saveGame() {
   const saveState = {
+    totalKills: totalKills,
     tokens: tokens,
     currentStage: currentStage,
     monsterHP: monsterHP,
@@ -685,6 +721,7 @@ function loadGame() {
   if (saved) {
     try {
       const data = JSON.parse(saved);
+      totalKills = data.totalKills || 0;
       tokens = data.tokens || 0;
       currentStage = data.currentStage || 1;
       monsterHP = data.monsterHP || -1;
@@ -865,6 +902,20 @@ setInterval(() => {
       combo = 1;
       comboDisplay.style.opacity = 0;
       comboDisplay.style.transform = "scale(1)";
+    }
+  }
+
+  // Gold Rush & Streak Timers
+  if (streakTimer > 0) {
+    streakTimer -= dt;
+    if (streakTimer <= 0) killStreak = 0;
+  }
+  if (goldRushTimer > 0) {
+    goldRushTimer -= dt;
+    if (goldRushTimer <= 0) {
+      goldRushTimer = 0;
+      isGoldRush = false;
+      document.body.classList.remove("gold-rush-active");
     }
   }
 
