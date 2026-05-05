@@ -262,6 +262,49 @@ body::before {
 }
 
 /* ════════════════════════════════
+   CUSTOM WEAPON CURSOR
+════════════════════════════════ */
+body { cursor: none !important; }
+
+.weapon-cursor {
+  position: fixed;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 9999;
+  transform-origin: 75% 75%; /* หมุนรอบจุดจับ (มือ) */
+  transform: rotate(-30deg);
+  transition: transform 0.08s ease-out;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+  will-change: transform, left, top;
+}
+.weapon-cursor img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* เวลากดคลิก — ยกขึ้นก่อน */
+.weapon-cursor.raise {
+  animation: weaponRaise 0.08s ease-out forwards;
+}
+/* เวลาปล่อย — ตีลงแรงๆ */
+.weapon-cursor.strike {
+  animation: weaponStrike 0.18s cubic-bezier(0.2, 0, 0.4, 1) forwards;
+}
+
+@keyframes weaponRaise {
+  0%   { transform: rotate(-30deg) translate(0, 0); }
+  100% { transform: rotate(-75deg) translate(-6px, -8px); }
+}
+@keyframes weaponStrike {
+  0%   { transform: rotate(-75deg) translate(-6px, -8px); }
+  50%  { transform: rotate(25deg) translate(8px, 10px);  }
+  75%  { transform: rotate(10deg) translate(4px, 5px);   }
+  100% { transform: rotate(-30deg) translate(0, 0);      }
+}
+
+/* ════════════════════════════════
    MONSTER BUTTON
 ════════════════════════════════ */
 .ai-core {
@@ -272,7 +315,7 @@ body::before {
   background-size: cover;
   background-position: center;
   border: none;
-  cursor: crosshair;
+  cursor: none;
   position: fixed;
   outline: none;
   z-index: 50;

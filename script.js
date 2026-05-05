@@ -473,12 +473,43 @@ function moveBossRandomly() {
   updateFloatingElements();
 }
 
+// ── Custom Animated Weapon Cursor ──
+const weaponCursor = document.getElementById("weaponCursor");
+const weaponImg    = document.getElementById("weaponImg");
+
 function swapWeapon() {
   const rWeapon = weapons[Math.floor(Math.random() * weapons.length)];
-  const cursorStr = `url('${rWeapon}') 24 24, crosshair`;
-  document.body.style.cursor = cursorStr;
-  aiCore.style.cursor = cursorStr;
+  if (weaponImg) weaponImg.src = rWeapon;
+  // ซ่อน cursor ดั้งเดิม (CSS จัดการแล้ว แต่ reset ค่า JS ไว้ด้วย)
+  document.body.style.cursor = "none";
 }
+
+// ติดตามเมาส์ — อัปเดตตำแหน่ง cursor แบบ raw (ไม่มี transition เพื่อ smooth)
+let curX = 0, curY = 0;
+document.addEventListener("mousemove", (e) => {
+  curX = e.clientX;
+  curY = e.clientY;
+  if (weaponCursor) {
+    weaponCursor.style.left = (curX - 16) + "px"; // offset ให้หัวค้อนอยู่ตรงปลาย cursor
+    weaponCursor.style.top  = (curY - 16) + "px";
+  }
+});
+
+// กดเมาส์ — ยกค้อนขึ้น
+document.addEventListener("mousedown", () => {
+  if (!weaponCursor) return;
+  weaponCursor.classList.remove("raise", "strike");
+  void weaponCursor.offsetWidth; // reflow เพื่อ reset animation
+  weaponCursor.classList.add("raise");
+});
+
+// ปล่อยเมาส์ — ตีลง!
+document.addEventListener("mouseup", () => {
+  if (!weaponCursor) return;
+  weaponCursor.classList.remove("raise", "strike");
+  void weaponCursor.offsetWidth;
+  weaponCursor.classList.add("strike");
+});
 
 // วิ่งสุ่มทุกๆ 2 วินาที
 setInterval(moveBossRandomly, 2000);
