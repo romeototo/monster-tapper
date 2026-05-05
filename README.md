@@ -23,9 +23,11 @@
 ## 🌟 PRO Features (New Update!)
 
 - **♻️ Ascension System:** Reached Stage 50? Ascend to restart your journey with a permanent global damage multiplier!
-- **⚡ Active Skills:** Unleash devastating abilities like **Berserk** (5x Click Damage) or **Midas Touch** (Instant Jackpot) to conquer tough bosses.
-- **🌌 Dynamic Biomes:** The game environment dynamically shifts through different themes (Forest, Volcano, Void, Cyber) as you progress through stages.
-- **✨ Premium Game Juice:** Enhanced visual feedback including **Squash & Stretch** animations, interactive **Particle Effects**, and dynamic **Screen Shake** on critical hits.
+- **⚡ Active Skills & Passives:** Unleash abilities like **Berserk** or **Midas Touch**, and invest in permanent passive buffs.
+- **🛡️ Relics & Artifacts:** Defeat elite bosses to collect powerful relics that boost your stats.
+- **🐾 Pet Companions:** Hatch and equip pets like the *Dragon Whelp* or *Spirit Fox* to aid you in battle.
+- **✨ Premium Game Juice:** Enhanced visual feedback including dynamic **Screen Shake**, **Trailing HP Bars**, **Ground Shadows**, and neon typography.
+- **🌌 Dynamic Biomes:** The game environment dynamically shifts through different themes (Forest, Volcano, Void, Cyber) as you progress.
 - **💾 Offline Progression:** Your hired heroes continue to farm essence even when you close the browser.
 
 ## 🎮 Core Mechanics
