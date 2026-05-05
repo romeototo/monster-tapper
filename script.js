@@ -23,6 +23,12 @@ const comboDisplay = document.getElementById('comboDisplay');
 const offlineModal = document.getElementById('offlineModal');
 const offlineEarnings = document.getElementById('offlineEarnings');
 const claimBtn = document.getElementById('claimBtn');
+const skillsContainer = document.getElementById('skillsContainer');
+
+const activeSkills = [
+    { id: 'berserk', name: 'Berserk', icon: '🔥', desc: 'x5 Click Damage', duration: 10, cooldown: 60, currentCD: 0, isActive: false },
+    { id: 'midas', name: 'Midas', icon: '💰', desc: 'Instant Gold', duration: 0, cooldown: 45, currentCD: 0, isActive: false }
+];
 
 const upgrades = [
     { id: 'peasant', name: '🧑‍🌾 ชาวบ้านถือไม้กระบอง', desc: '+1 Auto-Damage / วินาที', baseCost: 15, costMult: 1.15, tps: 1, count: 0 },
@@ -156,6 +162,15 @@ function initStage() {
     }
     
     updateHPBar();
+    updateBiome();
+}
+
+function updateBiome() {
+    document.body.classList.remove('theme-forest', 'theme-volcano', 'theme-void', 'theme-cyber');
+    if (currentStage <= 10) document.body.classList.add('theme-forest');
+    else if (currentStage <= 20) document.body.classList.add('theme-volcano');
+    else if (currentStage <= 30) document.body.classList.add('theme-void');
+    else document.body.classList.add('theme-cyber');
 }
 
 function updateHPBar() {
@@ -209,11 +224,38 @@ function spawnCoins() {
     }
 }
 
+function spawnParticles(x, y, color) {
+    for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 10 + 5;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.background = color || 'var(--primary)';
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        
+        const tx = (Math.random() - 0.5) * 200;
+        const ty = (Math.random() - 0.5) * 200;
+        p.style.setProperty('--tx', `${tx}px`);
+        p.style.setProperty('--ty', `${ty}px`);
+        
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+    }
+}
+
 function dealDamage(amount, x, y, isCrit) {
     monsterHP -= amount;
     tokens += amount; // 1 Damage = 1 Token
     if (x !== null && y !== null) {
         createFloatingNumber(x, y, amount, isCrit);
+        spawnParticles(x, y, isCrit ? '#fbbf24' : null);
+        
+        // Squash & Stretch
+        aiCore.classList.remove('monster-hit');
+        void aiCore.offsetWidth;
+        aiCore.classList.add('monster-hit');
     }
     
     if (monsterHP <= 0) {
@@ -264,7 +306,12 @@ aiCore.addEventListener('mousedown', (e) => {
     combo += 0.1; if(combo > 5.0) combo = 5.0; comboTimer = 2.0;
     
     let isCrit = Math.random() < 0.1; // 10% โอกาสติดคริ
-    const actualPower = clickPower * combo * (isCrit ? 5 : 1);
+    
+    // Skill: Berserk Check
+    const berserkSkill = activeSkills.find(s => s.id === 'berserk');
+    const skillMult = berserkSkill.isActive ? 5 : 1;
+    
+    const actualPower = clickPower * combo * (isCrit ? 5 : 1) * skillMult;
     
     dealDamage(actualPower, e.clientX, e.clientY, isCrit);
     
@@ -386,6 +433,44 @@ function spawnGoldenBug() {
     bug.addEventListener('touchstart', (e) => { e.preventDefault(); bug.onmousedown(e.touches[0]); }, {passive: false});
 }
 
+// ----------------- Skills Logic -----------------
+function renderSkills() {
+    skillsContainer.innerHTML = '';
+    activeSkills.forEach(skill => {
+        const btn = document.createElement('button');
+        btn.className = `skill-btn ${skill.isActive ? 'active' : ''}`;
+        btn.disabled = skill.currentCD > 0;
+        btn.innerHTML = `
+            <span class="icon">${skill.icon}</span>
+            <div class="cooldown-overlay" style="height: ${(skill.currentCD / skill.cooldown) * 100}%"></div>
+        `;
+        btn.title = `${skill.name}: ${skill.desc}`;
+        btn.onclick = () => useSkill(skill);
+        skillsContainer.appendChild(btn);
+    });
+}
+
+function useSkill(skill) {
+    if (skill.currentCD > 0) return;
+    playBuy();
+    
+    if (skill.id === 'berserk') {
+        skill.isActive = true;
+        skill.currentCD = skill.cooldown;
+        setTimeout(() => {
+            skill.isActive = false;
+            renderSkills();
+        }, skill.duration * 1000);
+    } else if (skill.id === 'midas') {
+        const reward = tokensPerSecond * 60 + (100 * clickPower);
+        tokens += reward;
+        skill.currentCD = skill.cooldown;
+        createFloatingNumber(window.innerWidth/2, window.innerHeight/2, reward, true, "MIDAS! +");
+    }
+    
+    renderSkills();
+}
+
 // Game Loop
 let lastTime = Date.now();
 setInterval(() => {
@@ -413,12 +498,22 @@ setInterval(() => {
     if (tokensPerSecond > 0 && monsterHP > 0) { 
         dealDamage(tokensPerSecond * dt, null, null, false); 
     }
+
+    // Update Skills Cooldown
+    activeSkills.forEach(skill => {
+        if (skill.currentCD > 0) {
+            skill.currentCD -= dt;
+            if (skill.currentCD < 0) skill.currentCD = 0;
+            renderSkills();
+        }
+    });
 }, 50);
 
 // เริ่มเกม!
 loadGame();
 swapWeapon();
 renderUpgrades();
+renderSkills();
 updateUI();
 
 // ปุ่ม Reset Progress สำหรับผู้เล่น
