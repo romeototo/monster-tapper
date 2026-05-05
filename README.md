@@ -45,8 +45,25 @@ This project showcases several advanced front-end web development techniques:
 
 - **Game Loop Architecture:** Utilizing `setInterval` and delta time for consistent logic execution.
 - **State Management:** Robust saving/loading system using browser `localStorage` with offline time calculation.
-- **Web Audio API:** Synthesized custom 8-bit sound effects using real-time oscillators instead of static audio files.
+- **Web Audio API:** Synthesized custom 8-bit sound effects using real-time math (Oscillators) instead of loading `.mp3` or `.wav` files. This ensures lightning-fast load times with zero audio file overhead!
 - **Modern UI/UX:** Glassmorphism design, CSS variables for theming, and complex keyframe animations.
+
+## 📂 Project Structure
+
+```text
+📦 monster-tapper
+ ┣ 📜 index.html         # Main game layout and UI structure
+ ┣ 🎨 style.css          # Core layout, animations, and game juice
+ ┣ 🎨 right-panel.css    # UI styling for the 5-tab RPG systems
+ ┣ ⚙️ script.js          # Main game loop, damage math, and upgrades
+ ┗ ⚙️ right-panel.js     # Logic for pets, relics, buffs, and achievements
+```
+
+## 🛠️ Customization & Modding
+
+The codebase is highly modular. Want to add your own content? It's easy!
+- **Add a new Pet:** Open `right-panel.js` and add a new object to the `mtPetData` array. The game will automatically render it in the Pets tab!
+- **Add a new Boss Relic:** Simply append a new entry to the `mtRelicData` array in `right-panel.js`.
 
 ## 🗺️ Development Roadmap
 
