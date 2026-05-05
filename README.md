@@ -31,13 +31,14 @@
 ## 🎮 Core Mechanics
 
 - **Tap to Attack:** Click the monster core to deal damage and collect essence.
-- **Barracks & Arsenal:** Hire units like the *Void Warlock* or *Celestial Titan* to scale your automated Damage Per Second (DPS).
+- **Barracks & Arsenal:** Hire units like the _Void Warlock_ or _Celestial Titan_ to scale your automated Damage Per Second (DPS).
 - **Elite Boss Stages:** Every 10 stages, face a massive Boss with a strict 30-second timer. Fail, and you fall back!
 - **Combo Multiplier:** Tap rapidly to build your combo meter and multiply your damage output up to 5x.
 
 ## 🛠️ Technical Details
 
 This project showcases several advanced front-end web development techniques:
+
 - **Game Loop Architecture:** Utilizing `setInterval` and delta time for consistent logic execution.
 - **State Management:** Robust saving/loading system using browser `localStorage` with offline time calculation.
 - **Web Audio API:** Synthesized custom 8-bit sound effects using real-time oscillators instead of static audio files.
