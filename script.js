@@ -18,17 +18,21 @@ const SAVE_KEY = "ai_tycoon_save";
 let prestigeMultiplier = 1;
 let totalAscensions = 0;
 
-const scoreDisplay = document.getElementById("scoreDisplay");
-const tpsDisplay = document.getElementById("tpsDisplay");
-const aiCore = document.getElementById("aiCore");
-const upgradesList = document.getElementById("upgradesList");
-const comboDisplay = document.getElementById("comboDisplay");
-const offlineModal = document.getElementById("offlineModal");
+const scoreDisplay    = document.getElementById("scoreDisplay");
+const tpsDisplay      = document.getElementById("tpsDisplay");
+const stageNumber     = document.getElementById("stageNumber");
+const aiCore          = document.getElementById("aiCore");
+const upgradesList    = document.getElementById("upgradesList");
+const comboDisplay    = document.getElementById("comboDisplay");
+const offlineModal    = document.getElementById("offlineModal");
 const offlineEarnings = document.getElementById("offlineEarnings");
-const claimBtn = document.getElementById("claimBtn");
+const claimBtn        = document.getElementById("claimBtn");
 const skillsContainer = document.getElementById("skillsContainer");
 const prestigeSection = document.getElementById("prestigeSection");
-const prestigeBtn = document.getElementById("prestigeBtn");
+const prestigeBtn     = document.getElementById("prestigeBtn");
+const floatingHP      = document.getElementById("floatingHP");
+const stageNameElem   = document.getElementById("stageName");
+const PANEL_WIDTH     = 380; // px — width of right upgrades panel
 
 const upgrades = [
   {
@@ -239,16 +243,16 @@ function renderUpgrades() {
 
 function updateUI() {
   scoreDisplay.innerText = formatNumber(tokens);
-  tpsDisplay.innerText = formatNumber(tokensPerSecond) + " DPS";
-  const btns = document.querySelectorAll(".upgrade-btn");
+  tpsDisplay.innerText   = formatNumber(tokensPerSecond);
+  if (stageNumber) stageNumber.innerText = currentStage;
+  const btns   = document.querySelectorAll(".upgrade-btn");
   const prices = document.querySelectorAll(".upgrade-price");
   upgrades.forEach((upgrade, index) => {
     const cost = getCost(upgrade);
     const canAfford = tokens >= cost;
     if (btns[index]) {
       btns[index].disabled = !canAfford;
-      prices[index].className =
-        `upgrade-price ${canAfford ? "cost-green" : "cost-red"}`;
+      prices[index].className = `upgrade-price ${canAfford ? "cost-green" : "cost-red"}`;
     }
   });
 }
@@ -264,33 +268,31 @@ function recalculateStats() {
 // ----------------- Monster Health & Stages -----------------
 function initStage() {
   isBossStage = currentStage % 10 === 0;
-
-  // บอสใหญ่มีเลือดเยอะกว่าปกติ 5 เท่า
   const healthMultiplier = isBossStage ? 5 : 1;
-  monsterMaxHP =
-    Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
+  monsterMaxHP = Math.floor(50 * Math.pow(1.2, currentStage - 1)) * healthMultiplier;
   monsterHP = monsterMaxHP;
 
-  // บอสใหญ่ใช้รูปมังกร (m10) เสมอ, ลูกกระจ๊อกสุ่ม 9 ตัวแรก
+  // Monster image
   const mIndex = isBossStage ? 9 : (currentStage - 1) % 9;
   aiCore.style.backgroundImage = `url('${monsters[mIndex]}')`;
 
-  // อัปเดตชื่อด่าน
-  const stageNameElem = document.getElementById("stageName");
+  // Stage name (floating element above monster)
   if (stageNameElem) {
     if (isBossStage) {
-      stageNameElem.innerHTML = `<span style="color: #fbbf24; text-shadow: 0 0 15px #f59e0b;">👑 ELITE BOSS ${currentStage} 👑</span>`;
+      stageNameElem.innerHTML = `<span style="color:#f5a623;">👑 ELITE BOSS ${currentStage}</span>`;
     } else {
       stageNameElem.innerText = `STAGE ${currentStage}`;
     }
   }
 
+  if (stageNumber) stageNumber.innerText = currentStage;
+
   // Prestige check
   if (currentStage >= 50 && prestigeSection) {
-    prestigeSection.style.display = "block";
+    prestigeSection.style.display = "flex";
   }
 
-  // ตั้งค่าตัวจับเวลาบอส (30 วินาที)
+  // Boss timer
   const bossTimerElem = document.getElementById("bossTimer");
   if (isBossStage) {
     bossTimeLeft = 30.0;
@@ -318,12 +320,35 @@ function updateBiome() {
 }
 
 function updateHPBar() {
-  const hpBar = document.getElementById("hpBar");
+  const hpBar  = document.getElementById("hpBar");
   const hpText = document.getElementById("hpText");
   if (!hpBar || !hpText) return;
   const pct = Math.max(0, (monsterHP / monsterMaxHP) * 100);
   hpBar.style.width = pct + "%";
+  // Color changes: green → yellow → red
+  if (pct > 60) hpBar.style.background = "linear-gradient(90deg, #10b981, #34d399)";
+  else if (pct > 30) hpBar.style.background = "linear-gradient(90deg, #f59e0b, #fbbf24)";
+  else hpBar.style.background = "linear-gradient(90deg, #ef4444, #f97316)";
   hpText.innerText = `${formatNumber(monsterHP)} / ${formatNumber(monsterMaxHP)} HP`;
+}
+
+// Position floating HP bar and stage name above the monster
+function updateFloatingElements() {
+  const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
+  const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
+  const monsterSize = 110;
+  const hpW = 160;
+
+  // Floating HP — centered above monster
+  if (floatingHP) {
+    floatingHP.style.left = (mx + monsterSize / 2) + "px";
+    floatingHP.style.top  = (my - 50) + "px";
+  }
+  // Stage name — above HP bar
+  if (stageNameElem) {
+    stageNameElem.style.left = (mx + monsterSize / 2) + "px";
+    stageNameElem.style.top  = (my - 72) + "px";
+  }
 }
 
 function spawnCoins() {
@@ -369,19 +394,21 @@ function spawnCoins() {
   }
 }
 
-function spawnParticles(x, y, color) {
-  for (let i = 0; i < 8; i++) {
+function spawnParticles(x, y, color, count = 8) {
+  for (let i = 0; i < count; i++) {
     const p = document.createElement("div");
     p.className = "particle";
-    const size = Math.random() * 10 + 5;
+    const size = Math.random() * 15 + 5;
     p.style.width = size + "px";
     p.style.height = size + "px";
     p.style.background = color || "var(--primary)";
     p.style.left = x + "px";
     p.style.top = y + "px";
+    p.style.boxShadow = `0 0 10px ${color || "var(--primary)"}`;
 
-    const tx = (Math.random() - 0.5) * 200;
-    const ty = (Math.random() - 0.5) * 200;
+    const spread = count > 10 ? 600 : 200; // ระเบิดกระจายแรงขึ้น 3 เท่าตอนตีติดคริ
+    const tx = (Math.random() - 0.5) * spread;
+    const ty = (Math.random() - 0.5) * spread;
     p.style.setProperty("--tx", `${tx}px`);
     p.style.setProperty("--ty", `${ty}px`);
 
@@ -395,9 +422,15 @@ function dealDamage(amount, x, y, isCrit) {
   tokens += amount; // 1 Damage = 1 Token
   if (x !== null && y !== null) {
     createFloatingNumber(x, y, amount, isCrit);
-    spawnParticles(x, y, isCrit ? "#fbbf24" : null);
 
-    if (isCrit) triggerFlash();
+    if (isCrit) {
+      spawnParticles(x, y, "#ef4444", 30); // ระเบิดเลือดแดง
+      spawnParticles(x, y, "#fbbf24", 20); // ประกายทอง
+      spawnParticles(x, y, "#ffffff", 10); // สะเก็ดแสงสว่าง
+      triggerFlash();
+    } else {
+      spawnParticles(x, y, "var(--primary)", 8);
+    }
 
     // Squash & Stretch
     aiCore.classList.remove("monster-hit");
@@ -429,14 +462,15 @@ function dealDamage(amount, x, y, isCrit) {
   updateUI();
 }
 
-// ----------------- Monster Movement & Swapping -----------------
+// ── Monster zone: left side only (avoid right upgrade panel) ──
 function moveBossRandomly() {
-  const maxX = window.innerWidth - 120;
-  const maxY = window.innerHeight - 120;
-  const x = Math.max(20, Math.random() * maxX);
-  const y = Math.max(20, Math.random() * maxY);
+  const safeRight = window.innerWidth - PANEL_WIDTH - 130;
+  const maxY = window.innerHeight - 160;
+  const x = Math.max(30, Math.random() * safeRight);
+  const y = Math.max(80, Math.random() * maxY);
   aiCore.style.left = x + "px";
-  aiCore.style.top = y + "px";
+  aiCore.style.top  = y + "px";
+  updateFloatingElements();
 }
 
 function swapWeapon() {
@@ -449,9 +483,11 @@ function swapWeapon() {
 // วิ่งสุ่มทุกๆ 2 วินาที
 setInterval(moveBossRandomly, 2000);
 
-// จัดตำแหน่งตรงกลางจอตอนเริ่ม
-aiCore.style.left = window.innerWidth / 2 - 50 + "px";
-aiCore.style.top = window.innerHeight / 2 - 50 + "px";
+// เริ่มตำแหน่งตรงกลางโซนซ้าย
+const initX = (window.innerWidth - PANEL_WIDTH) / 2 - 55;
+aiCore.style.left = initX + "px";
+aiCore.style.top  = (window.innerHeight / 2 - 55) + "px";
+updateFloatingElements();
 
 // เมื่อตีมอนสเตอร์!
 aiCore.addEventListener("mousedown", (e) => {
@@ -460,7 +496,7 @@ aiCore.addEventListener("mousedown", (e) => {
   if (combo > 5.0) combo = 5.0;
   comboTimer = 2.0;
 
-  let isCrit = Math.random() < 0.1; // 10% โอกาสติดคริ
+  let isCrit = Math.random() < 0.15; // เพิ่มโอกาสคริติคอลเป็น 15% เพื่อความสะใจ
 
   // Skill: Berserk Check
   const berserkSkill = activeSkills.find((s) => s.id === "berserk");
@@ -470,7 +506,21 @@ aiCore.addEventListener("mousedown", (e) => {
 
   dealDamage(actualPower, e.clientX, e.clientY, isCrit);
 
-  if (combo >= 1.5) {
+  if (isCrit) {
+    // 💥 Massive Screen Shake (Earthquake)
+    document.body.classList.remove("earthquake");
+    void document.body.offsetWidth;
+    document.body.classList.add("earthquake");
+
+    // ⏱️ Hit Stop (หยุดเวลาสั้นๆ พร้อมเปลี่ยนสี)
+    aiCore.classList.add("hit-stop");
+    setTimeout(() => aiCore.classList.remove("hit-stop"), 80);
+    
+    // Combo effect without shake (since earthquake handles it)
+    comboDisplay.style.opacity = 1;
+    comboDisplay.innerText = `Combo x${combo.toFixed(1)}! 🔥`;
+    comboDisplay.style.transform = `scale(${1 + combo / 20})`;
+  } else if (combo >= 1.5) {
     comboDisplay.style.opacity = 1;
     comboDisplay.innerText = `Combo x${combo.toFixed(1)}! 🔥`;
     comboDisplay.style.transform = `scale(${1 + combo / 20})`;
@@ -591,7 +641,7 @@ function loadGame() {
 }
 
 function showOfflineModal(amount) {
-  offlineEarnings.innerText = "+" + formatNumber(amount) + " Tokens";
+  offlineEarnings.innerText = "+" + formatNumber(amount) + " Essence";
   offlineModal.classList.add("active");
 }
 
@@ -654,10 +704,13 @@ function renderSkills() {
     const btn = document.createElement("button");
     btn.className = `skill-btn ${skill.isActive ? "active" : ""}`;
     btn.disabled = skill.currentCD > 0;
+    const cdSecs = skill.currentCD > 0 ? Math.ceil(skill.currentCD) : "";
     btn.innerHTML = `
-            <span class="icon">${skill.icon}</span>
-            <div class="cooldown-overlay" style="height: ${(skill.currentCD / skill.cooldown) * 100}%"></div>
-        `;
+      <span class="icon">${skill.icon}</span>
+      <span class="skill-label">${skill.name}</span>
+      ${cdSecs ? `<span class="skill-cd">${cdSecs}s</span>` : ""}
+      <div class="cooldown-overlay" style="height: ${(skill.currentCD / skill.cooldown) * 100}%"></div>
+    `;
     btn.title = `${skill.name}: ${skill.desc}`;
     btn.onclick = () => useSkill(skill);
     skillsContainer.appendChild(btn);

@@ -4,190 +4,87 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monster Tapper - Premium</title>
+    <meta name="description" content="Monster Tapper Pro — A premium idle clicker game. Tap, upgrade, and ascend to destroy endless monsters." />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <button
-      id="resetBtn"
-      style="
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid var(--text-muted);
-        color: var(--text-muted);
-        padding: 8px 20px;
-        border-radius: 12px;
-        cursor: pointer;
-        z-index: 1000;
-        font-family: &quot;Inter&quot;;
-        font-size: 0.8rem;
-        transition: all 0.2s;
-      "
-    >
-      Reset Data
-    </button>
 
     <!-- Ambient Background Effects -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
-    <div
-      id="flashOverlay"
-      style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 2000;
-      "
-    ></div>
 
-    <!-- Health Bar & Stage Info -->
-    <div
-      id="stageInfo"
-      style="
-        position: fixed;
-        top: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        z-index: 1000;
-        pointer-events: none;
-      "
-    >
-      <h2
-        id="stageName"
-        style="
-          color: #f8fafc;
-          font-family: &quot;Outfit&quot;;
-          font-size: 2.8rem;
-          margin-bottom: 8px;
-          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-          letter-spacing: 2px;
-        "
-      >
-        STAGE 1
-      </h2>
-      <div
-        id="bossTimer"
-        style="
-          color: #ef4444;
-          font-weight: 800;
-          font-family: &quot;Outfit&quot;;
-          font-size: 1.8rem;
-          margin-bottom: 15px;
-          display: none;
-          text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-        "
-      >
-        ⏱️ 30.0s
+    <!-- Flash Overlay for Crits -->
+    <div id="flashOverlay"></div>
+
+    <!-- ===== TOP-LEFT: Game Info Panel ===== -->
+    <div class="info-panel">
+      <div class="game-brand">
+        MONSTER <span class="text-glow">TAPPER</span>
+        <span class="brand-pro">PRO</span>
       </div>
 
-      <div
-        class="hp-container"
-        style="
-          width: 450px;
-          height: 40px;
-          background: rgba(15, 23, 42, 0.8);
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 20px;
-          overflow: hidden;
-          position: relative;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        "
-      >
-        <div
-          id="hpBar"
-          style="
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
-            transition: width 0.15s cubic-bezier(0, 0, 0.2, 1);
-          "
-        ></div>
-        <div
-          id="hpText"
-          style="
-            position: absolute;
-            width: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-weight: 800;
-            font-family: &quot;Outfit&quot;;
-            font-size: 1.1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-          "
-        >
-          10 / 10 HP
+      <div class="stats-row">
+        <div class="stat-block">
+          <div class="stat-label">Essence</div>
+          <div class="stat-value" id="scoreDisplay">0</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-label">Auto DPS</div>
+          <div class="stat-value accent" id="tpsDisplay">0</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-label">Stage</div>
+          <div class="stat-value" id="stageNumber">1</div>
         </div>
       </div>
+
+      <div class="combo-display" id="comboDisplay">COMBO x1.0 🔥</div>
+
+      <!-- Prestige Section -->
+      <div id="prestigeSection" class="prestige-panel" style="display:none;">
+        <span class="prestige-label">⚡ LEGACY READY</span>
+        <button id="prestigeBtn" class="prestige-btn-small">Ascend Now</button>
+      </div>
+    </div>
+
+    <!-- ===== Floating Stage Name (above monster, updated by JS) ===== -->
+    <div id="stageName" class="floating-stage-name">STAGE 1</div>
+
+    <!-- ===== Floating HP Bar (follows monster, updated by JS) ===== -->
+    <div id="floatingHP" class="floating-hp">
+      <div id="bossTimer" class="boss-timer" style="display:none;">⏱️ 30.0s</div>
+      <div class="hp-track">
+        <div id="hpBar" class="hp-fill"></div>
+      </div>
+      <div id="hpText" class="hp-text">50 / 50 HP</div>
     </div>
 
     <!-- Monster Core -->
     <button class="ai-core" id="aiCore"></button>
 
-    <div class="game-container">
-      <!-- Score Section -->
-      <div class="clicker-section">
-        <h1 class="game-title">
-          MONSTER <span class="text-glow">TAPPER</span>
-          <small style="font-size: 1rem; vertical-align: middle; opacity: 0.5"
-            >PRO</small
-          >
-        </h1>
-        <div class="score-board">
-          <div class="score-label">Total Essence</div>
-          <div class="score-value" id="scoreDisplay">0</div>
-          <div class="tps-value" id="tpsDisplay">0 DPS</div>
-          <div class="combo-display" id="comboDisplay">COMBO x1.0 🔥</div>
-        </div>
-
-        <!-- Prestige Section (Initially Hidden) -->
-        <div
-          id="prestigeSection"
-          style="
-            display: none;
-            background: rgba(251, 191, 36, 0.1);
-            border: 1px solid #fbbf24;
-            padding: 1.5rem;
-            border-radius: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.5s;
-          "
-        >
-          <h3 style="color: #fbbf24; margin-bottom: 10px">LEGACY READY</h3>
-          <button
-            id="prestigeBtn"
-            class="claim-btn"
-            style="padding: 10px 25px; font-size: 1rem"
-          >
-            Ascend Now
-          </button>
-        </div>
+    <!-- ===== RIGHT PANEL: Upgrades ===== -->
+    <div class="upgrades-panel">
+      <div class="upgrades-header">
+        <h2 class="section-title">⚔️ Barracks &amp; Arsenal</h2>
+        <div class="ascension-badge" id="ascensionBadge" style="display:none;"></div>
       </div>
-
-      <!-- Upgrades Section -->
-      <div class="upgrades-section">
-        <h2 class="section-title">Barracks & Arsenal</h2>
-        <div class="upgrades-list" id="upgradesList">
-          <!-- Injected via JS -->
-        </div>
+      <div class="upgrades-list" id="upgradesList">
+        <!-- Injected via JS -->
       </div>
     </div>
 
-    <!-- Active Skills -->
+    <!-- ===== BOTTOM CENTER: Active Skills ===== -->
     <div class="skills-container" id="skillsContainer"></div>
+
+    <!-- Reset Button -->
+    <button id="resetBtn" class="reset-btn">Reset Data</button>
 
     <!-- Offline Modal -->
     <div class="offline-modal" id="offlineModal">
