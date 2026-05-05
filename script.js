@@ -364,23 +364,23 @@ function updateHPBar() {
   hpText.innerText = `${formatNumber(monsterHP)} / ${formatNumber(monsterMaxHP)} HP`;
 }
 
-// Position floating HP bar, stage name, and monster aura above the monster
+// Position floating HP bar, stage name, and monster aura
 function updateFloatingElements() {
   const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
   const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
-  const monsterSize = 110;
+  const monsterSize = 160; // updated to match CSS size
 
   // Floating HP — centered above monster
   if (floatingHP) {
     floatingHP.style.left = (mx + monsterSize / 2) + "px";
-    floatingHP.style.top  = (my - 50) + "px";
+    floatingHP.style.top  = (my - 55) + "px";
   }
   // Stage name — above HP bar
   if (stageNameElem) {
     stageNameElem.style.left = (mx + monsterSize / 2) + "px";
-    stageNameElem.style.top  = (my - 72) + "px";
+    stageNameElem.style.top  = (my - 78) + "px";
   }
-  // Monster Aura — sits behind monster
+  // Monster Aura — centered on monster
   const aura = document.getElementById("monsterAura");
   if (aura) {
     aura.style.left = (mx + monsterSize / 2) + "px";
@@ -499,12 +499,12 @@ function dealDamage(amount, x, y, isCrit) {
   updateUI();
 }
 
-// ── Monster zone: left side only (avoid right upgrade panel) ──
+// Monster zone: left side only, safe margins for 160px monster
 function moveBossRandomly() {
-  const safeRight = window.innerWidth - PANEL_WIDTH - 130;
-  const maxY = window.innerHeight - 160;
-  const x = Math.max(30, Math.random() * safeRight);
-  const y = Math.max(80, Math.random() * maxY);
+  const safeRight = window.innerWidth - PANEL_WIDTH - 180;
+  const maxY = window.innerHeight - 220;
+  const x = Math.max(40, Math.random() * safeRight);
+  const y = Math.max(100, Math.random() * maxY);
   aiCore.style.left = x + "px";
   aiCore.style.top  = y + "px";
   updateFloatingElements();

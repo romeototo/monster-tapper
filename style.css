@@ -173,12 +173,28 @@ body::before {
 
 /* Stage Progress Bar */
 .stage-progress-wrapper {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 8px 10px;
   margin-bottom: 10px;
 }
+.stage-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.stage-progress-title {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
 .stage-progress-track {
-  height: 4px;
+  height: 5px;
   background: rgba(255,255,255,0.06);
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
   margin-bottom: 4px;
 }
@@ -186,9 +202,9 @@ body::before {
   height: 100%;
   width: 10%;
   background: linear-gradient(90deg, var(--primary), #a8b1ff);
-  border-radius: 4px;
+  border-radius: 5px;
   transition: width 0.4s ease;
-  box-shadow: 0 0 6px var(--primary-glow);
+  box-shadow: 0 0 8px var(--primary-glow);
 }
 .stage-progress-label {
   font-size: 0.62rem;
@@ -351,12 +367,13 @@ body { cursor: none !important; }
 }
 
 /* ════════════════════════════════
-   MONSTER BUTTON (no dark circle)
+   MONSTER BUTTON
+   No border-radius = no dark circle clip
 ════════════════════════════════ */
 .ai-core {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  border-radius: 0;               /* ไม่ตัดวงกลม — ให้ PNG transparent ลอยตามธรรมชาติ */
   background-color: transparent;
   background-size: contain;
   background-position: center;
@@ -366,41 +383,45 @@ body { cursor: none !important; }
   position: fixed;
   outline: none;
   z-index: 50;
-  filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7));
   transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              top  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               filter 0.05s;
 }
 .ai-core:active {
-  filter: brightness(1.6) drop-shadow(0 0 25px red);
+  filter: brightness(1.8) drop-shadow(0 0 30px red);
   transform: scale(0.82);
 }
 
 /* ════════════════════════════════
-   MONSTER AURA (ambient pulsing glow)
+   MONSTER AURA (bright pulsing glow)
 ════════════════════════════════ */
 .monster-aura {
   position: fixed;
-  width: 180px;
-  height: 180px;
+  width: 260px;
+  height: 260px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 45;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-  animation: auraBreath 3s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(94,106,210,0.55) 0%, rgba(94,106,210,0.15) 50%, transparent 75%);
+  animation: auraBreath 2.5s ease-in-out infinite;
   transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              top 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              top  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .monster-aura.aura-boss {
-  width: 240px;
-  height: 240px;
-  background: radial-gradient(circle, rgba(245,166,35,0.4) 0%, transparent 70%);
-  animation: auraBreath 1.5s ease-in-out infinite;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(245,166,35,0.6) 0%, rgba(245,166,35,0.2) 50%, transparent 75%);
+  animation: auraBreath 1.2s ease-in-out infinite;
 }
+body.theme-forest .monster-aura  { background: radial-gradient(circle, rgba(16,185,129,0.5) 0%, rgba(16,185,129,0.15) 50%, transparent 75%); }
+body.theme-volcano .monster-aura { background: radial-gradient(circle, rgba(244,63,94,0.5)  0%, rgba(244,63,94,0.15)  50%, transparent 75%); }
+body.theme-void .monster-aura    { background: radial-gradient(circle, rgba(139,92,246,0.5) 0%, rgba(139,92,246,0.15) 50%, transparent 75%); }
+body.theme-cyber .monster-aura   { background: radial-gradient(circle, rgba(6,182,212,0.5)  0%, rgba(6,182,212,0.15)  50%, transparent 75%); }
 @keyframes auraBreath {
-  0%,100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1);    }
-  50%      { opacity: 1.0; transform: translate(-50%, -50%) scale(1.15); }
+  0%,100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1);    }
+  50%      { opacity: 1.0; transform: translate(-50%,-50%) scale(1.12); }
 }
 
 /* ════════════════════════════════
