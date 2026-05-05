@@ -1,3 +1,20 @@
+let tokens = 0;
+let tokensPerSecond = 0;
+let clickPower = 1;
+
+let currentStage = 1;
+let monsterMaxHP = 50;
+let monsterHP = 50;
+let bossTimeLeft = 0;
+let isBossStage = false;
+
+// Combo System
+let combo = 1;
+let comboTimer = 0;
+
+// Save System
+const SAVE_KEY = 'ai_tycoon_save';
+
 let prestigeMultiplier = 1;
 let totalAscensions = 0;
 
