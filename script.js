@@ -377,7 +377,7 @@ function updateHPBar() {
 function updateFloatingElements() {
   const mx = parseFloat(aiCore.style.left) || window.innerWidth / 2;
   const my = parseFloat(aiCore.style.top)  || window.innerHeight / 2;
-  const monsterSize = 160; // updated to match CSS size
+  const monsterSize = 200; // match CSS size
 
   // Floating HP — centered above monster
   if (floatingHP) {
