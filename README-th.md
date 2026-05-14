@@ -22,6 +22,19 @@
 
 ---
 
+## Project Snapshot
+
+| รายการ | รายละเอียด |
+| ------ | ----------- |
+| **บทบาท** | creative browser game experiment สำหรับโชว์ interactive UI และ progression systems |
+| **Live demo** | [romeototo.github.io/monster-tapper](https://romeototo.github.io/monster-tapper/) |
+| **Stack** | HTML, CSS, JavaScript, localStorage, Web Audio API |
+| **Impact** | boss stages, idle upgrades, combo loop, RPG-style progression, responsive game UI |
+| **สถานะ** | Active creative side project |
+| **Portfolio reference** | [romeototo portfolio](https://romeototo.github.io/portfolio-website/#projects) |
+
+---
+
 ## 🌟 ฟีเจอร์ระดับ PRO (อัปเดตใหม่ล่าสุด!)
 
 - **♻️ ระบบจุติ (Ascension):** เมื่อถึงด่านที่ 50 สามารถเลือก "จุติ" เพื่อเริ่มเล่นใหม่พร้อมรับโบนัสตัวคูณพลังโจมตีแบบถาวร!
