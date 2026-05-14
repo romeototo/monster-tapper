@@ -22,6 +22,19 @@
 
 ---
 
+## Project Snapshot
+
+| Item | Details |
+| ---- | ------- |
+| **Role** | Creative browser game experiment showing interactive UI and progression systems |
+| **Live demo** | [romeototo.github.io/monster-tapper](https://romeototo.github.io/monster-tapper/) |
+| **Stack** | HTML, CSS, JavaScript, localStorage, Web Audio API |
+| **Impact** | Boss stages, idle upgrades, combo loop, RPG-style progression, responsive game UI |
+| **Status** | Active creative side project |
+| **Portfolio reference** | [romeototo portfolio](https://romeototo.github.io/portfolio-website/#projects) |
+
+---
+
 ## 🌟 PRO Features (New Update!)
 
 - **♻️ Ascension System:** Reached Stage 50? Ascend to restart your journey with a permanent global damage multiplier!
