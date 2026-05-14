@@ -5,11 +5,11 @@
 **เกมแนว Idle Clicker สุดพรีเมียม — ปราบมอนสเตอร์ รวบรวม Essence อัปเกรดกองกำลัง และเผชิญหน้ากับบอสยักษ์สุดท้าทาย!**
 
 <p>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-  <img src="https://img.shields.io/github/last-commit/romeototo/monster-tapper?style=for-the-badge&color=8B5CF6" />
-  <img src="https://img.shields.io/github/license/romeototo/monster-tapper?style=for-the-badge&color=10B981" />
+  <a href="https://github.com/romeototo/monster-tapper/releases"><img src="https://img.shields.io/github/v/release/romeototo/monster-tapper?style=for-the-badge" alt="Release" /></a>
+  <a href="https://github.com/romeototo/monster-tapper/actions"><img src="https://img.shields.io/github/actions/workflow/status/romeototo/monster-tapper/code-quality.yml?style=for-the-badge&label=Code_Quality" alt="Code Quality" /></a>
+  <a href="https://romeototo.github.io/monster-tapper/"><img src="https://img.shields.io/badge/🚀_Live_Demo-GitHub_Pages-6366f1?style=for-the-badge" alt="Live Demo" /></a>
+  <img src="https://img.shields.io/badge/Tech-HTML5_|_CSS3_|_VanillaJS-3776ab?style=for-the-badge&logo=javascript&logoColor=white" alt="Tech Stack" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" alt="License" /></a>
 </p>
 
 <i>👉 <a href="README.md">🇬🇧 Read in English</a></i><br><br>
