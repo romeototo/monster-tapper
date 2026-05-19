@@ -114,5 +114,5 @@ python -m http.server 8000
 <div align="center">
   <b>พัฒนาโดย <a href="https://github.com/romeototo">romeototo</a></b><br>
   <i>Automate · Control · Innovate</i><br>
-  <a href="https://romeototo.github.io/resume/">ดูพอร์ตโฟลิโอของฉัน</a>
+  <a href="https://romeototo.github.io/portfolio-website/">ดูพอร์ตโฟลิโอของฉัน</a>
 </div>

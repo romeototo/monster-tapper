@@ -114,5 +114,5 @@ This project is licensed under the **MIT License**. You are free to study, modif
 <div align="center">
   <b>Developed by <a href="https://github.com/romeototo">romeototo</a></b><br>
   <i>Automate · Control · Innovate</i><br>
-  <a href="https://romeototo.github.io/resume/">View My Portfolio</a>
+  <a href="https://romeototo.github.io/portfolio-website/">View My Portfolio</a>
 </div>
