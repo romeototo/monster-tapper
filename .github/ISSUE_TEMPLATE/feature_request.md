@@ -3,7 +3,7 @@ name: Feature Request
 about: Suggest an improvement
 title: "[FEATURE] "
 labels: enhancement
-assignees: ''
+assignees: ""
 ---
 
 ## 💡 Feature Description
